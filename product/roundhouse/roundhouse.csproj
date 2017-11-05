@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <CLSCompliant>true</CLSCompliant>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -56,18 +56,23 @@
     <PackageReference Include="FluentNHibernate" Version="2.0.3" />
     <PackageReference Include="Iesi.Collections" Version="4.0.2" />
     <PackageReference Include="Microsoft.Build.Framework" Version="15.3.409" />
-    <PackageReference Include="NHibernate" Version="5.0.0" />
     <PackageReference Include="EnterpriseLibrary.TransientFaultHandling" Version="6.0.1304.0" />
     <PackageReference Include="EnterpriseLibrary.TransientFaultHandling.Data" Version="6.0.1304.1" />
     <PackageReference Include="log4net" Version="2.0.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="StructureMap" Version="4.5.2" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="NHibernate" Version="5.0.0" />
+  </ItemGroup> 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="NHibernate" Version="5.0.0-ci-00140-dbg-NH-3807" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
-    <PackageReference Include="System.Security.Principal.Windows" Version="4.4.0">
-      <IncludeAssets></IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.4.0" />
+  </ItemGroup> 
+             
+             
   <ItemGroup>
     <EmbeddedResource Include="infrastructure.app\logging\log4net.config.xml" />
   </ItemGroup>
