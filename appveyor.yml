@@ -6,6 +6,9 @@ install:
 services:
   - mssql2016
 
+environment:
+  "roundhouse:tests:connectionstring:sqlserver": "Server=(local)\SQL2016;Database=master;User ID=sa;Password=Password12!"
+  
 before_build:
   - ps: gitversion /l console /output buildserver
 

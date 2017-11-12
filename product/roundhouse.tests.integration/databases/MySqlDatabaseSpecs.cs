@@ -12,12 +12,21 @@ namespace roundhouse.tests.integration.databases
         {
             protected static string database_name = "TestRoundhousE";
             protected static string sql_files_folder = @"..\..\..\..\db\MySQL\TestRoundhousE";
-            
+
+            protected static readonly string connection_string = get_connection_string();
+
+            private static string get_connection_string()
+            {
+                return 
+                    Environment.GetEnvironmentVariable("roundhouse:tests:connectionstring:mysql")
+                    ?? "server=localhost;uid=root;database=TestRoundhousE;";
+            }
+
             public void Dispose()
             {
                 new Migrate().Set(p =>
                 {
-                    p.ConnectionString = "server=localhost;uid=root;database=TestRoundhousE;";
+                    p.ConnectionString = connection_string;
                     p.SqlFilesDirectory = sql_files_folder;
                     p.DatabaseType = "mysql";
                     p.Drop = true;
@@ -37,7 +46,7 @@ namespace roundhouse.tests.integration.databases
                 new Migrate().Set(p =>
                 {
                     p.Logger = new ConsoleLogger();
-                    p.ConnectionString = "server=localhost;uid=root;database=TestRoundhousE;";
+                    p.ConnectionString = connection_string;
                     p.SqlFilesDirectory = sql_files_folder;
                     p.DatabaseType = "mysql";
                     p.Silent = true;

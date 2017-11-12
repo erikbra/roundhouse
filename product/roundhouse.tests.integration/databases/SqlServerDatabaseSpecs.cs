@@ -15,10 +15,21 @@ namespace roundhouse.tests.integration.databases
             protected static string database_name = "TestRoundhousE";
             protected static string sql_files_folder = @"..\..\..\..\db\SqlServer\TestRoundhousE";
 
+            protected static readonly string connection_string = get_connection_string();
+
+            private static string get_connection_string()
+            {
+                return Environment.GetEnvironmentVariable("roundhouse:tests:connectionstring:sqlserver");
+            }
+
             public void Dispose()
             {
                 new Migrate().Set(p =>
                                   {
+                                      if (connection_string != null)
+                                      {
+                                          p.ConnectionString = connection_string;
+                                      }
                                       p.DatabaseName = database_name;
                                       p.SqlFilesDirectory = sql_files_folder;
                                       p.Drop = true;
@@ -37,6 +48,10 @@ namespace roundhouse.tests.integration.databases
             {
                 new Migrate().Set(p =>
                                   {
+                                      if (connection_string != null)
+                                      {
+                                          p.ConnectionString = connection_string;
+                                      }
                                       p.Logger = new ConsoleLogger();
                                       p.DatabaseName = database_name;
                                       p.SqlFilesDirectory = sql_files_folder;
