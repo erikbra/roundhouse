@@ -28,7 +28,7 @@ namespace roundhouse.tests.integration.databases
                                   {
                                       if (connection_string != null)
                                       {
-                                          p.ConnectionString = connection_string;
+                                          p.ConnectionStringAdmin = connection_string;
                                       }
                                       p.DatabaseName = database_name;
                                       p.SqlFilesDirectory = sql_files_folder;
