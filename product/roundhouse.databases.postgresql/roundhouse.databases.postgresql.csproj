@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
- <ItemGroup>
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -41,10 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="2.0.3" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.2" />
-    <PackageReference Include="NHibernate" Version="5.0.0" />
-    <PackageReference Include="Npgsql" Version="3.2.5" />
+    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
+    <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <PackageReference Include="NHibernate" Version="5.1.1" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\roundhouse\roundhouse.csproj" />
