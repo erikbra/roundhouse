@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+    <RuntimeIdentifiers>win-x86;win-x64;osx-x64;osx.10.13-x64;ubuntu-x64</RuntimeIdentifiers>
     <CLSCompliant>true</CLSCompliant>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,18 +53,18 @@
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <PackageReference Include="ILLink.Tasks" Version="0.1.5-preview-1461378" />
     <PackageReference Include="NHibernate" Version="5.1.1" />
     <PackageReference Include="NHibernate.JetDriver" Version="2.0.0.1002" />
     <PackageReference Include="log4net" Version="2.0.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Polly" Version="5.9.0" />
     <PackageReference Include="StructureMap" Version="4.6.1" />
-    <PackageReference Include="System.Data.SqlClient">
-      <Version>4.4.3</Version>
-    </PackageReference>
-    <PackageReference Include="System.Security.Principal.Windows">
-      <Version>4.4.1</Version>
-    </PackageReference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.4.1" />
+    <PackageReference Include="System.Net.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <ProjectReference Include="..\roundhouse.databases.access\roundhouse.databases.access.csproj" ExcludeAssets="All" />
