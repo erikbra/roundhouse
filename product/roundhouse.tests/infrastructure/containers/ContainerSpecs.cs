@@ -6,7 +6,7 @@ namespace roundhouse.tests.infrastructure.containers
     using roundhouse.infrastructure.containers;
     using roundhouse.infrastructure.logging;
     using roundhouse.infrastructure.logging.custom;
-    using StructureMap;
+    using Lamar;
     using Container = roundhouse.infrastructure.containers.Container;
 
     public class ContainerSpecs

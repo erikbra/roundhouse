@@ -52,11 +52,11 @@
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="Iesi.Collections" Version="4.0.4" />
+    <PackageReference Include="Lamar" Version="1.1.1" />
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" />
     <PackageReference Include="log4net" Version="2.0.8.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Polly" Version="5.9.0" />
-    <PackageReference Include="StructureMap" Version="4.6.1" />
     <PackageReference Include="NHibernate" Version="5.1.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
@@ -67,6 +67,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="infrastructure.app\logging\log4net.config.no.console.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\..\structuremap\src\StructureMap\bin\Release\netstandard2.0\StructureMap.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <!-- Copy to drop folder after packaging -->
   <Target Name="CopyToDropFolder" AfterTargets="Pack" Condition="'$(DropFolder)' != ''">

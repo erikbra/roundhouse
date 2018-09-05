@@ -2,3 +2,4 @@ roundhouse.databases.Database
 roundhouse.*
 NHibernate.Cfg.MappingSchema.*
 StructureMap.InstanceBuilder
+Lamar.*

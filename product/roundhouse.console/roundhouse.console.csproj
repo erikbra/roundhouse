@@ -50,7 +50,8 @@
     <PackageReference Include="log4net" Version="2.0.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Polly" Version="5.9.0" />
-    <PackageReference Include="StructureMap" Version="4.6.1" />
+    <PackageReference Include="StructureMap" Version="4.7.0" />
+    <PackageReference Include="Lamar" Version="1.1.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
     <PackageReference Include="System.Data.SqlClient">
       <Version>4.4.3</Version>
@@ -77,12 +78,10 @@
       <Link>roundhouse.ico</Link>
     </None>
   </ItemGroup>
-  
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <None Include="rh" CopyToOutputDirectory="PreserveNewest" />
     <None Include="rh.bat" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  
   <!-- Merge properties and target -->
   <PropertyGroup>
     <ILMergeDir>..\..\code_drop\merge\</ILMergeDir>
@@ -98,7 +97,7 @@
       <ILMerge>..\..\lib\ILMerge\ILMerge.exe</ILMerge>
       <ILMergeLog>$(LogDir)roundhouse.console.ILMerge.log</ILMergeLog>
       <ILMergeSource>$(OutputPath)$(AssemblyName).exe</ILMergeSource>
-      <ILMergeCommand>$(ILMerge) /internalize:$(IgnoreFile) /target:exe /out:$(ILMergeTarget) /log:$(ILMergeLog) /ndebug /zeroPeKind /allowDup $(ILMergeSource)  @(ILMergeAssemblies, ' ')</ILMergeCommand>
+      <ILMergeCommand>$(ILMerge) /target:exe /out:$(ILMergeTarget) /log:$(ILMergeLog) /ndebug /zeroPeKind /allowDup $(ILMergeSource)  @(ILMergeAssemblies, ' ')</ILMergeCommand>
     </PropertyGroup>
     <Delete Files="$(ILMergeLog);$(ILMergeTarget)" Condition="Exists($(ILMergeDir))" />
     <MakeDir Directories="$(ILMergeDir)" />
@@ -110,19 +109,16 @@
     <NuspecFile>roundhouse.nuspec</NuspecFile>
     <NuspecProperties>mergedExe=$(ILMergeTarget);version=$(NugetVersion)</NuspecProperties>
   </PropertyGroup>
-  
-  <Target Name="CollectDotnetCoreFiles" AfterTargets="Publish" Condition="'$(TargetFramework)' == 'netcoreapp2.0'" >
+  <Target Name="CollectDotnetCoreFiles" AfterTargets="Publish" Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
     <ItemGroup>
       <DotnetCoreAppFiles Include="$(OutDir)/publish/**/**" />
     </ItemGroup>
     <PropertyGroup>
       <CopyDestination>$(DropFolder)/tmp/RoundhousE</CopyDestination>
     </PropertyGroup>
-      
     <MakeDir Directories="$(CopyDestination)" />
-    <Copy SourceFiles="@(DotnetCoreAppFiles)" DestinationFiles="$(CopyDestination)/%(DotnetCoreAppFiles.RecursiveDir)%(Filename)%(Extension)"/>
+    <Copy SourceFiles="@(DotnetCoreAppFiles)" DestinationFiles="$(CopyDestination)/%(DotnetCoreAppFiles.RecursiveDir)%(Filename)%(Extension)" />
   </Target>
-  
   <!-- Copy to drop folder after packaging -->
   <Target Name="CopyToDropFolder" AfterTargets="Pack" Condition="'$(DropFolder)' != ''">
     <ItemGroup>

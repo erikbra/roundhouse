@@ -23,7 +23,7 @@ namespace roundhouse.infrastructure.app
     using logging;
     using migrators;
     using resolvers;
-    using StructureMap;
+    using Lamar;
     using Container = roundhouse.infrastructure.containers.Container;
     using System.Linq;
 
@@ -169,32 +169,25 @@ namespace roundhouse.infrastructure.app
             set_up_current_mappings(configuration_property_holder);
 
             Logger multiLogger = GetMultiLogger(configuration_property_holder);
-
-            var container = new StructureMap.Container(cfg =>
-                                        {
-                                            cfg.For<ConfigurationPropertyHolder>().Singleton().Use(configuration_property_holder);
-                                            cfg.For<FileSystemAccess>().Singleton().Use(context => new DotNetFileSystemAccess(configuration_property_holder));
-                                            cfg.For<Database>().Singleton().Use(context => DatabaseBuilder.build(context.GetInstance<FileSystemAccess>(), configuration_property_holder));
-                                            cfg.For<KnownFolders>().Singleton().Use(context => KnownFoldersBuilder.build(context.GetInstance<FileSystemAccess>(), configuration_property_holder));
-                                            cfg.For<LogFactory>().Singleton().Use<MultipleLoggerLogFactory>();
-                                            //cfg.For<Logger>().Singleton().Use(context => LogBuilder.build(context.GetInstance<FileSystemAccess>(), configuration_property_holder));
-                                            cfg.For<Logger>().Use(multiLogger);
-                                            cfg.For<CryptographicService>().Singleton().Use<MD5CryptographicService>();
-                                            cfg.For<DatabaseMigrator>().Singleton().Use(context => new DefaultDatabaseMigrator(context.GetInstance<Database>(), context.GetInstance<CryptographicService>(), configuration_property_holder));
-                                            cfg.For<VersionResolver>().Singleton().Use(
-                                                context => VersionResolverBuilder.build(context.GetInstance<FileSystemAccess>(), configuration_property_holder));
-                                            cfg.For<EnvironmentSet>().Singleton().Use(new DefaultEnvironmentSet(configuration_property_holder));
-                                            cfg.For<Initializer>().Singleton().Use<FileSystemInitializer>();
-                                        });
+            
+            var registry = new ServiceRegistry(configuration_property_holder, multiLogger);
+            var container = new Lamar.Container(registry);
 
             // forcing a build of database to initialize connections so we can be sure server/database have values
+
+            Lamar.Scanning.TypeRepository.AssertNoTypeScanningFailures();
+            container.AssertConfigurationIsValid();
+
+            //System.Console.WriteLine(container.WhatDoIHave());
+            //System.Console.WriteLine(container.WhatDidIScan());
+
             Database database = container.GetInstance<Database>();
             database.initialize_connections(configuration_property_holder);
             configuration_property_holder.ServerName = database.server_name;
             configuration_property_holder.DatabaseName = database.database_name;
             configuration_property_holder.ConnectionString = database.connection_string;
 
-            return new StructureMapContainer(container);
+            return new LamarContainer(container);
         }
 
         private static Logger GetMultiLogger(ConfigurationPropertyHolder configuration_property_holder)

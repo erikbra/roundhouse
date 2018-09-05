@@ -1,12 +1,12 @@
+using System;
 using Moq;
+using roundhouse.infrastructure.containers.custom;
+using roundhouse.infrastructure.logging;
+using roundhouse.infrastructure.logging.custom;
+using StructureMap;
 
-namespace roundhouse.tests.infrastructure.containers.custom
+namespace roundhouse.tests.infrastructure.containers.custom.StructureMap
 {
-    using System;
-    using roundhouse.infrastructure.containers.custom;
-    using roundhouse.infrastructure.logging;
-    using roundhouse.infrastructure.logging.custom;
-    using StructureMap;
     using Container = roundhouse.infrastructure.containers.Container;
 
     public class StructureMapContainerSpecs
@@ -41,7 +41,7 @@ namespace roundhouse.tests.infrastructure.containers.custom
 
             public concerns_using_a_real_container()
             {
-                the_container = new StructureMap.Container();
+                the_container = new global::StructureMap.Container();
                 sut = new StructureMapContainer(the_container);
             }
         }
