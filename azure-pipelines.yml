@@ -22,11 +22,11 @@ steps:
   displayName: 'Run a multi-line script'
 
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: '$(Build.binariesdirectory)' 
-      artifactName: '$(name)' 
-      publishLocation: 'Container' # Options: container, filePath
-      #targetPath: # Required when publishLocation == FilePath
+- task: PublishBuildArtifacts@1
+  inputs:
+  pathtoPublish: '$(Build.binariesdirectory)' 
+  #artifactName: '' 
+  publishLocation: 'Container' # Options: container, filePath
+  #targetPath: # Required when publishLocation == FilePath
       #parallel: false # Optional
       #parallelCount: # Optional
