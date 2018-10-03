@@ -1,5 +1,9 @@
 pool:
-  vmImage: 'Hosted Ubuntu 1604'
+  vmImage: 'Hosted VS2017'
+
+demands: [
+    "chocolatey"
+]
 
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
@@ -13,7 +17,8 @@ steps:
   displayName: 'Get nuget.exe'
 
 
-- powershell: .\build.ps1
+- script:  |
+  %comspec% /c ""C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\Tools\VsDevCmd.bat" & powershell.exe .\build.ps1""
   displayName: 'Build.ps1'
 
 - script: |
