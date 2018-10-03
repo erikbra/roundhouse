@@ -5,7 +5,7 @@ steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
 
 - powershell: |
-  echo "EHlo"
+    echo "EHlo"
   #$Version = "4.8.1";
   #try {
     #Invoke-WebRequest "https://dist.nuget.org/win-x86-commandline/v$Version/nuget.exe" -OutFile "$env:BUILD_BINARIESDIRECTORY\nuget.exe"
