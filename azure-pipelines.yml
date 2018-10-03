@@ -3,9 +3,6 @@ pool:
 
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
-      displayName: GitVersion
-      inputs:
-        additionalArguments: '/output buildserver'
 
 - powershell: .\build.ps1
   displayName: 'Build.ps1'
