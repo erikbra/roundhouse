@@ -1,0 +1,32 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  batch: true 
+  branches:
+    include: 
+    - master
+    - release/*
+    exclude: 
+  #paths:
+    #include: [string]
+    #exclude: [string]
+
+pool:
+  vmImage: 'Hosted Windows Container'
+
+steps:
+- task: gittools.gitversion.gitversion-task.GitVersion@3
+      displayName: GitVersion
+      inputs:
+        additionalArguments: '/output buildserver'
+
+- powershell: .\build.ps1
+  displayName: 'Build.ps1'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
