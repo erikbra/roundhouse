@@ -11,16 +11,21 @@ $onAppVeyor = $("$($env:APPVEYOR)" -eq "True");
 
 Push-Location $root
 
+# Check if gitversion is available
+if (Get-Command gitversion -ErrorAction SilentlyContinue) {
 
-"`n"
-" * Generating version number"
-$gitVersion = (gitversion | ConvertFrom-Json)
+    "`n"
+    " * Generating version number"
+    $gitVersion = (gitversion | ConvertFrom-Json)
 
-If ($onAppVeyor) {
-    $newVersion="$($gitVersion.FullSemVer)"
-    Write-host "   - Updating appveyor build version to: $newVersion"
-    $env:APPVEYOR_BUILD_VERSION="$newVersion"
-    appveyor UpdateBuild -Version "$newVersion"
+    If ($onAppVeyor) {
+        $newVersion="$($gitVersion.FullSemVer)"
+        Write-host "   - Updating appveyor build version to: $newVersion"
+        $env:APPVEYOR_BUILD_VERSION="$newVersion"
+        appveyor UpdateBuild -Version "$newVersion"
+    }
+    $env:GitVersion_FullSemVer = $gitVersion.FullSemVer
+    
 }
 
 " * Restoring nuget packages"
@@ -35,7 +40,7 @@ If (!(Test-Path $LOGDIR)) {
 }
 
 " * Building and packaging"
-msbuild /t:"Build;Pack" /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
+msbuild /t:"Build;Pack" /p:DropFolder=$CODEDROP /p:Version="$($env:GitVersion_FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
 
 "`n    - Packaging netcoreapp2.1 global tool dotnet-roundhouse`n"
 
