@@ -1,7 +1,5 @@
 #!/usr/bin/env pwsh
 
-$MSBUILD=msbuild
-
 $root = $PSScriptRoot;
 
 $CODEDROP="$($root)/code_drop";
