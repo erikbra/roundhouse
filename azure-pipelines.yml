@@ -1,10 +1,6 @@
 pool:
   vmImage: 'Hosted VS2017'
 
-demands: [
-    "chocolatey"
-]
-
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@3
 
