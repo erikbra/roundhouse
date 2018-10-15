@@ -13,8 +13,10 @@ steps:
   displayName: 'Get nuget.exe'
 
 
-- script:  |
-    %comspec% /c ""C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\Tools\VsDevCmd.bat" & powershell.exe .\build.ps1"
+#- script:  |
+- powershell:  |
+    .\build.ps1"
+    #%comspec% /c ""C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\Tools\VsDevCmd.bat" & powershell.exe .\build.ps1"
   displayName: 'Build.ps1'
 
 - script: |
