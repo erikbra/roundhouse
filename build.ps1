@@ -9,7 +9,8 @@ $TESTOUTDIR="$($root)/product/roundhouse.tests\bin"
 
 $onAppVeyor = $("$($env:APPVEYOR)" -eq "True");
 
-$msbuild = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
+# $msbuild = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
+$msbuild = "msbuild.exe"
 
 Push-Location $root
 
