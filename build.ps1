@@ -9,6 +9,8 @@ $TESTOUTDIR="$($root)/product/roundhouse.tests\bin"
 
 $onAppVeyor = $("$($env:APPVEYOR)" -eq "True");
 
+$msbuild = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
+
 Push-Location $root
 
 # Check if gitversion is available
@@ -40,7 +42,7 @@ If (!(Test-Path $LOGDIR)) {
 }
 
 " * Building and packaging"
-msbuild /t:"Build;Pack" /p:DropFolder=$CODEDROP /p:Version="$($env:GitVersion_FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
+& $msbuild /t:"Build;Pack" /p:DropFolder=$CODEDROP /p:Version="$($env:GitVersion_FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
 
 "`n    - Packaging netcoreapp2.1 global tool dotnet-roundhouse`n"
 
