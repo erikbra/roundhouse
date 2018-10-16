@@ -12,6 +12,10 @@ $onAppVeyor = $("$($env:APPVEYOR)" -eq "True");
 # $msbuild = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe"
 $msbuild = "msbuild.exe"
 
+"ENV::"
+dir env: 
+
+
 Push-Location $root
 
 # Check if gitversion is available
