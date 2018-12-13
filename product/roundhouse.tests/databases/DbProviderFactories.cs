@@ -76,6 +76,8 @@ namespace roundhouse.tests.databases
 
             public concern_for_Database()
             {
+                if (typeof(AccessDatabase).IsAssignableFrom(typeof(TDatabase)))
+                    TestEnvironment.RequireOleDb();
                 sut = new TDatabase();
             }
 
@@ -142,6 +144,10 @@ namespace roundhouse.tests.databases
         [Concern(typeof(TestableAccessDatabase))]
         public class concern_for_AccessDatabase : concern_for_Database<TestableAccessDatabase>
         {
+            public override void Context() {
+                TestEnvironment.RequireOleDb();
+            }
+
             protected override void set_database_properties()
             {
                 sut.connection_string = "Provider=NorthwindAccess";
@@ -171,6 +177,10 @@ namespace roundhouse.tests.databases
         [Concern(typeof(TestableSqliteDatabase))]
         public class concern_for_SqliteDatabase : concern_for_Database<TestableSqliteDatabase>
         {
+            public override void Context() {
+                TestEnvironment.RequireOleDb();
+            }
+
             [Observation]
             public void has_sqlite_provider_factory()
             {

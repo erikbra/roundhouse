@@ -4,7 +4,6 @@ namespace roundhouse.tests.sqlsplitters
 {
     using System;
     using System.Text.RegularExpressions;
-
     using roundhouse.databases;
 #if NET461
     using roundhouse.databases.access;
@@ -25,28 +24,36 @@ namespace roundhouse.tests.sqlsplitters
             {
                 Database database = new SqlServerDatabase();
                 tsql_separator_regex_string = database.sql_statement_separator_regex_pattern;
-                
-#if NET461
-                database = new AccessDatabase();
-                access_sql_separator_regex_string = database.sql_statement_separator_regex_pattern;
-                database = new OracleDatabase();
-                plsql_separator_regex_string = database.sql_statement_separator_regex_pattern;
-#endif
+
+                if (TestEnvironment.SupportsOleDb)
+                {
+                    database = new AccessDatabase();
+                    access_sql_separator_regex_string = database.sql_statement_separator_regex_pattern;
+                    database = new OracleDatabase();
+                    plsql_separator_regex_string = database.sql_statement_separator_regex_pattern;
+                }
             }
+
+         
         }
 
         [Concern(typeof(StatementSplitter))]
-        public class when_replacing_tsql_statements_with_the_statement_splitters_match_evaluator : concern_for_StatementSplitter
+        public class
+            when_replacing_tsql_statements_with_the_statement_splitters_match_evaluator : concern_for_StatementSplitter
         {
             protected static Regex script_regex_replace;
-            protected static string batch_terminator_replacement_string = StatementSplitter.batch_terminator_replacement_string;
+
+            protected static string batch_terminator_replacement_string =
+                StatementSplitter.batch_terminator_replacement_string;
+
             protected static string regex_split_string = StatementSplitter.regex_split_string;
             protected static string symbols_to_check = "`~!@#$%^&*()-_+=,.;:'\"[]\\/?<>";
             protected static string words_to_check = "abcdefghijklmnopqrstuvwzyz0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             public override void Because()
             {
-                script_regex_replace = new Regex(tsql_separator_regex_string, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                script_regex_replace = new Regex(tsql_separator_regex_string,
+                    RegexOptions.IgnoreCase | RegexOptions.Multiline);
             }
 
             [Observation]
@@ -54,7 +61,8 @@ namespace roundhouse.tests.sqlsplitters
             {
                 string sql_to_match = SplitterContext.FullSplitter.tsql_statement;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(SplitterContext.FullSplitter.tsql_statement_scrubbed, sql_statement_scrubbed);
             }
 
@@ -64,7 +72,8 @@ namespace roundhouse.tests.sqlsplitters
                 const string sql_to_match = @" GO ";
                 string expected_scrubbed = @" " + batch_terminator_replacement_string + @" ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -74,7 +83,8 @@ namespace roundhouse.tests.sqlsplitters
                 string sql_to_match = @" GO" + string.Format("\t");
                 string expected_scrubbed = @" " + batch_terminator_replacement_string + string.Format("\t");
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -84,7 +94,8 @@ namespace roundhouse.tests.sqlsplitters
                 const string sql_to_match = @"GO";
                 string expected_scrubbed = batch_terminator_replacement_string;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -96,7 +107,8 @@ whatever";
                 string expected_scrubbed = batch_terminator_replacement_string + @"
 whatever";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -108,7 +120,8 @@ whatever";
                 string expected_scrubbed = @" " + batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -124,7 +137,8 @@ GO
 " + batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -138,7 +152,8 @@ GO
 " + batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -152,7 +167,8 @@ GO
 " + batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -166,7 +182,8 @@ GO
 " + batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -176,7 +193,8 @@ GO
                 const string sql_to_match = @" GO ";
                 string expected_scrubbed = @" " + batch_terminator_replacement_string + @" ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -188,7 +206,8 @@ GO
                 string expected_scrubbed = words_to_check + @" " + batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -197,10 +216,12 @@ GO
             {
                 string sql_to_match = symbols_to_check + words_to_check + @" GO
 ";
-                string expected_scrubbed = symbols_to_check + words_to_check + @" " + batch_terminator_replacement_string + @"
+                string expected_scrubbed = symbols_to_check + words_to_check + @" " +
+                                           batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -209,10 +230,12 @@ GO
             {
                 string sql_to_match = words_to_check + symbols_to_check + @" GO
 ";
-                string expected_scrubbed = words_to_check + symbols_to_check + @" " + batch_terminator_replacement_string + @"
+                string expected_scrubbed = words_to_check + symbols_to_check + @" " +
+                                           batch_terminator_replacement_string + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -222,7 +245,8 @@ GO
                 string sql_to_match = @" GO " + words_to_check;
                 string expected_scrubbed = @" " + batch_terminator_replacement_string + @" " + words_to_check;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -230,9 +254,11 @@ GO
             public void should_replace_on_go_with_words_after_on_the_same_line_including_symbols()
             {
                 string sql_to_match = @" GO " + words_to_check + symbols_to_check;
-                string expected_scrubbed = @" " + batch_terminator_replacement_string + @" " + words_to_check + symbols_to_check;
+                string expected_scrubbed = @" " + batch_terminator_replacement_string + @" " + words_to_check +
+                                           symbols_to_check;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -240,19 +266,24 @@ GO
             public void should_replace_on_go_with_words_before_and_after_on_the_same_line()
             {
                 string sql_to_match = words_to_check + @" GO " + words_to_check;
-                string expected_scrubbed = words_to_check + @" " + batch_terminator_replacement_string + @" " + words_to_check;
+                string expected_scrubbed =
+                    words_to_check + @" " + batch_terminator_replacement_string + @" " + words_to_check;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
             [Observation]
             public void should_replace_on_go_with_words_before_and_after_on_the_same_line_including_symbols()
             {
-                string sql_to_match = words_to_check + symbols_to_check.Replace("'", "").Replace("\"", "") + " GO BOB" + symbols_to_check;
-                string expected_scrubbed = words_to_check + symbols_to_check.Replace("'", "").Replace("\"", "") + " " + batch_terminator_replacement_string + " BOB" + symbols_to_check;
+                string sql_to_match = words_to_check + symbols_to_check.Replace("'", "").Replace("\"", "") + " GO BOB" +
+                                      symbols_to_check;
+                string expected_scrubbed = words_to_check + symbols_to_check.Replace("'", "").Replace("\"", "") + " " +
+                                           batch_terminator_replacement_string + " BOB" + symbols_to_check;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -268,7 +299,8 @@ go";
 select ''
 " + batch_terminator_replacement_string;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -278,7 +310,8 @@ select ''
                 string sql_to_match = " GO -- comment";
                 string expected_scrubbed = " " + batch_terminator_replacement_string + " -- comment";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -290,7 +323,8 @@ select ''
                 const string expected_scrubbed = @" G
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -302,7 +336,8 @@ select ''
                 const string expected_scrubbed = @" O
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -314,7 +349,8 @@ select ''
                 string expected_scrubbed = words_to_check + @"GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -326,7 +362,8 @@ select ''
                 string expected_scrubbed = @"--GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -338,7 +375,8 @@ select ''
                 string expected_scrubbed = @"-- GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -350,7 +388,8 @@ select ''
                 string expected_scrubbed = @"-- GO " + words_to_check + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -362,7 +401,8 @@ select ''
                 string expected_scrubbed = @"-- GO " + symbols_to_check + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -374,7 +414,8 @@ select ''
                 string expected_scrubbed = @"--" + string.Format("\t") + @"GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -386,7 +427,8 @@ select ''
                 string expected_scrubbed = @"--" + string.Format("\t") + @"GO " + words_to_check + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -398,7 +440,8 @@ select ''
                 string expected_scrubbed = @"--" + string.Format("\t") + @"GO " + symbols_to_check + @"
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -410,7 +453,8 @@ select ''
                 string expected_scrubbed = @"-- " + words_to_check + @" GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -422,17 +466,21 @@ select ''
                 const string expected_scrubbed = @"' GO
             '";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
             [Observation]
-            public void should_not_replace_on_go_when_between_tick_marks_with_symbols_and_words_before_ending_on_same_line()
+            public void
+                should_not_replace_on_go_when_between_tick_marks_with_symbols_and_words_before_ending_on_same_line()
             {
                 string sql_to_match = @"' " + symbols_to_check.Replace("'", string.Empty) + words_to_check + @" GO'";
-                string expected_scrubbed = @"' " + symbols_to_check.Replace("'", string.Empty) + words_to_check + @" GO'";
+                string expected_scrubbed =
+                    @"' " + symbols_to_check.Replace("'", string.Empty) + words_to_check + @" GO'";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -444,7 +492,8 @@ select ''
                 string expected_scrubbed = @"' " + symbols_to_check.Replace("'", string.Empty) + words_to_check + @" GO
             '";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -456,7 +505,8 @@ select ''
                 string expected_scrubbed = @"' GO
             " + symbols_to_check.Replace("'", string.Empty) + words_to_check + @"'";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -468,19 +518,22 @@ select ''
                 string expected_scrubbed = @"--" + symbols_to_check + @" GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
             [Observation]
-            public void should_not_replace_on_go_with_double_dash_comment_starting_line_with_words_and_symbols_before_go()
+            public void
+                should_not_replace_on_go_with_double_dash_comment_starting_line_with_words_and_symbols_before_go()
             {
                 string sql_to_match = @"--" + symbols_to_check + words_to_check + @" GO
 ";
                 string expected_scrubbed = @"--" + symbols_to_check + words_to_check + @" GO
 ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -490,7 +543,8 @@ select ''
                 string sql_to_match = @"/* GO */";
                 string expected_scrubbed = @"/* GO */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -502,7 +556,8 @@ select ''
                 string expected_scrubbed = @"/* GO 
 */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -520,7 +575,8 @@ select ''
 
 */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -540,7 +596,8 @@ GO
 
 */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -562,7 +619,8 @@ GO
 " + words_to_check + @"
 */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -582,22 +640,32 @@ GO
 " + symbols_to_check + @" 
 */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
-
         }
 
         [Concern(typeof(StatementSplitter))]
-        public class when_replacing_plsql_statements_with_the_statement_splitters_match_evaluator : concern_for_StatementSplitter
+        public class
+            when_replacing_plsql_statements_with_the_statement_splitters_match_evaluator : concern_for_StatementSplitter
         {
+            public override void Context()
+            {
+                TestEnvironment.RequireOleDb();
+            }
+
             protected static Regex script_regex_replace;
-            protected static string batch_terminator_replacement_string = StatementSplitter.batch_terminator_replacement_string;
+
+            protected static string batch_terminator_replacement_string =
+                StatementSplitter.batch_terminator_replacement_string;
+
             protected static string regex_split_string = StatementSplitter.regex_split_string;
 
             public override void Because()
             {
-                script_regex_replace = new Regex(plsql_separator_regex_string, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                script_regex_replace = new Regex(plsql_separator_regex_string,
+                    RegexOptions.IgnoreCase | RegexOptions.Multiline);
             }
 
             [Observation]
@@ -605,7 +673,8 @@ GO
             {
                 string sql_to_match = SplitterContext.FullSplitter.plsql_statement;
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(SplitterContext.FullSplitter.plsql_statement_scrubbed, sql_statement_scrubbed);
             }
 
@@ -619,7 +688,8 @@ SQL2";
 " + batch_terminator_replacement_string + @"
 SQL2";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -629,7 +699,8 @@ SQL2";
                 string sql_to_match = @"/* ; */";
                 string expected_scrubbed = @"/* ; */";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
@@ -639,22 +710,24 @@ SQL2";
                 string sql_to_match = @"SQL1;";
                 string expected_scrubbed = @"SQL1;";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
 
             [Observation]
             public void should_not_replace_on_assigning_values_to_variables()
             {
+                
                 string sql_to_match = @"tmpSql := 'DROP SEQUENCE mutatieStockID';
 EXECUTE IMMEDIATE tmpSql; ";
                 string expected_scrubbed = @"tmpSql := 'DROP SEQUENCE mutatieStockID';
 EXECUTE IMMEDIATE tmpSql; ";
                 Console.WriteLine(sql_to_match);
-                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match, match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
+                string sql_statement_scrubbed = script_regex_replace.Replace(sql_to_match,
+                    match => StatementSplitter.evaluate_and_replace_batch_split_items(match, script_regex_replace));
                 Assert.AreEqual(expected_scrubbed, sql_statement_scrubbed);
             }
         }
     }
 }
-
