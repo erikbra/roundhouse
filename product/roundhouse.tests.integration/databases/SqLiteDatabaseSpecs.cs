@@ -11,7 +11,7 @@ namespace roundhouse.tests.integration.databases
         public abstract class concern_for_SqLiteDatabase : TinySpec, IDisposable
         {
             protected static string database_name = "TestRoundhousE";
-            protected static string sql_files_folder = @"..\..\..\..\db\SQLite\TestRoundhousE";
+            protected static string sql_files_folder = TestEnvironment.test_script_dir("SQLite", database_name);
 
             public void Dispose()
             {

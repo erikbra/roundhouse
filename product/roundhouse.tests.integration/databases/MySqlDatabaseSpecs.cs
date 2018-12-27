@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using NUnit.Framework;
 
 namespace roundhouse.tests.integration.databases
 {
@@ -10,14 +12,16 @@ namespace roundhouse.tests.integration.databases
     {
         public abstract class concern_for_MySqlDatabase :  TinySpec, IDisposable
         {
+            private static string RootDir = TestEnvironment.solution_root;
+            
             protected static string database_name = "TestRoundhousE";
-            protected static string sql_files_folder = @"..\..\..\..\db\MySQL\TestRoundhousE";
+            protected static string sql_files_folder = TestEnvironment.test_script_dir("MySQL", database_name);
             
             public void Dispose()
             {
                 new Migrate().Set(p =>
                 {
-                    p.ConnectionString = "server=localhost;uid=root;database=TestRoundhousE;";
+                    p.ConnectionString = $"server=localhost;uid=root;database={database_name};";
                     p.SqlFilesDirectory = sql_files_folder;
                     p.DatabaseType = "mysql";
                     p.Drop = true;
@@ -37,7 +41,7 @@ namespace roundhouse.tests.integration.databases
                 new Migrate().Set(p =>
                 {
                     p.Logger = new ConsoleLogger();
-                    p.ConnectionString = "server=localhost;uid=root;database=TestRoundhousE;";
+                    p.ConnectionString = $"server=localhost;uid=root;database={database_name};";
                     p.SqlFilesDirectory = sql_files_folder;
                     p.DatabaseType = "mysql";
                     p.Silent = true;

@@ -13,17 +13,19 @@ namespace roundhouse.tests.integration.databases
         public abstract class concern_for_SqlServerDatabase : TinySpec, IDisposable
         {
             protected static string database_name = "TestRoundhousE";
-            protected static string sql_files_folder = @"..\..\..\..\db\SqlServer\TestRoundhousE";
+            protected static string sql_files_folder = TestEnvironment.test_script_dir("SqlServer", database_name);
+            protected static readonly string connection_string = $"Data Source=tcp:localhost,1433;Database={database_name};User Id=sa;Password=SoopaS33krit;";
+
 
             public void Dispose()
             {
                 new Migrate().Set(p =>
-                                  {
-                                      p.DatabaseName = database_name;
-                                      p.SqlFilesDirectory = sql_files_folder;
-                                      p.Drop = true;
-                                      p.Silent = true;
-                                  }).Run();
+                {
+                    p.ConnectionString = connection_string;
+                    p.SqlFilesDirectory = sql_files_folder;
+                    p.Drop = true;
+                    p.Silent = true;
+                }).Run();
             }
         }
 
@@ -36,12 +38,12 @@ namespace roundhouse.tests.integration.databases
             public override void Because()
             {
                 new Migrate().Set(p =>
-                                  {
-                                      p.Logger = new ConsoleLogger();
-                                      p.DatabaseName = database_name;
-                                      p.SqlFilesDirectory = sql_files_folder;
-                                      p.Silent = true;
-                                  }).Run();
+                {
+                    p.ConnectionString = connection_string;
+                    p.Logger = new ConsoleLogger();
+                    p.SqlFilesDirectory = sql_files_folder;
+                    p.Silent = true;
+                }).Run();
             }
 
             [Observation]

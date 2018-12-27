@@ -97,6 +97,16 @@ This is the best way to get to the bleeding edge of what we are doing.
 3. Type `git config core.autocrlf false` to leave line endings as they are.  
 4. Type `git status`. You should not see any files to change.
 5. Run `build.bat`. NOTE: You must have git on the path (open a regular command line and type git).
+
+
+### Running integration tests
+
+Before running integration tests, run MySql and SqlServer in Docker containers, like this:
+
+```
+docker run -p 3306:3306 --name rh-test-mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d mysql:latest
+docker run --name rh-test-sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=SoopaS33krit' -p 1433:1433 -d microsoft/mssql-server-linux:2017-latest
+```
   
   
 # REQUIREMENTS

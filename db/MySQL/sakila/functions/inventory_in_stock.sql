@@ -4,6 +4,8 @@ DELIMITER $$
 CREATE FUNCTION inventory_in_stock (
     p_inventory_id INT
 ) RETURNS TINYINT
+  READS SQL DATA
+  DETERMINISTIC
 BEGIN
     DECLARE v_rentals INT;
     DECLARE v_out     INT;

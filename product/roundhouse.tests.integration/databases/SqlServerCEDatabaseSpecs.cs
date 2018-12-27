@@ -14,7 +14,7 @@ namespace roundhouse.tests.integration.databases
         {
             protected readonly string server_name = string.Format("sqlserverce-{0}.sdf", Guid.NewGuid());
             protected static string database_name = "TestRoundhousE";
-            protected static string sql_files_folder = @"..\..\..\..\db\SqlServer\TestRoundhousE";
+            protected static string sql_files_folder = TestEnvironment.test_script_dir("SqlServer", database_name);
             protected static Migrate migrator;
 
             protected static SqlServerCEDatabase db = new SqlServerCEDatabase();
@@ -26,7 +26,7 @@ namespace roundhouse.tests.integration.databases
                     migrator =  new Migrate().Set(p =>
                     {
                         p.ServerName = server_name;
-                        p.Logger = new ConsoleLogger();
+                        p.Logger = new TestContextLogger();
                         p.DatabaseType = "SqlServerCE";
                         p.SqlFilesDirectory = sql_files_folder;
                         p.Silent = true;
