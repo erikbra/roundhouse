@@ -104,58 +104,48 @@ namespace roundhouse.databases.oracle
 
         public static string get_version(string roundhouse_schema_name, string version_table_name, string repository_path)
         {
-            return string.Format(
-                 @"
+            return $@"
                     SELECT version
-                    FROM (SELECT * FROM {0}_{1}
+                    FROM (SELECT * FROM {roundhouse_schema_name}_{version_table_name}
                             WHERE 
-                                repository_path = '{2}'
+                                repository_path = '{repository_path}'
                             ORDER BY entry_date DESC)
                     WHERE ROWNUM < 2
-                ",
-                roundhouse_schema_name, version_table_name, repository_path);
+                ";
         }
 
         public static string get_version_parameterized(string roundhouse_schema_name, string version_table_name)
         {
-            return string.Format(
-                 @"
+            return $@"
                     SELECT version
-                    FROM (SELECT * FROM {0}_{1}
+                    FROM (SELECT * FROM {roundhouse_schema_name}_{version_table_name}
                             WHERE 
                                 repository_path = :repository_path
                             ORDER BY entry_date DESC)
                     WHERE ROWNUM < 2
-                ",
-                roundhouse_schema_name, version_table_name);
+                ";
         }
 
         public static string get_current_script_hash_parameterized(string roundhouse_schema_name, string scripts_run_table_name)
         {
-            return string.Format(
-                @"
+            return $@"
                     SELECT text_hash
-                    FROM (SELECT * FROM {0}_{1}
+                    FROM (SELECT * FROM {roundhouse_schema_name}_{scripts_run_table_name}
                             WHERE 
                                 script_name = :script_name
                             ORDER BY entry_date DESC)
                     WHERE ROWNUM < 2
-                ",
-                roundhouse_schema_name, scripts_run_table_name
-                );
+                ";
         }
 
         public static string has_script_run_parameterized(string roundhouse_schema_name, string scripts_run_table_name)
         {
-            return string.Format(
-                @"
+            return $@"
                     SELECT 
                         script_name
-                    FROM {0}_{1}
+                    FROM {roundhouse_schema_name}_{scripts_run_table_name}
                     WHERE script_name = :script_name
-                ",
-                roundhouse_schema_name, scripts_run_table_name
-                );
+                ";
         }
 
         public static string insert_script_run_parameterized(string roundhouse_schema_name, string scripts_run_table_name)

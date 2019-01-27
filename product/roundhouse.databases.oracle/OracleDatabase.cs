@@ -16,15 +16,9 @@ namespace roundhouse.databases.oracle
     {
         private string connect_options = "Integrated Security";
 
-        public override string sql_statement_separator_regex_pattern
-        {
-            get { return @"(?<KEEP1>^(?:.)*(?:-{2}).*$)|(?<KEEP1>/{1}\*{1}[\S\s]*?\*{1}/{1})|(?<KEEP1>^|\s)(?<BATCHSPLITTER>;)(?<KEEP2>\s|$)"; }
-        }
+        public override string sql_statement_separator_regex_pattern => @"(?<KEEP1>^(?:.)*(?:-{2}).*$)|(?<KEEP1>/{1}\*{1}[\S\s]*?\*{1}/{1})|(?<KEEP1>^|\s)(?<BATCHSPLITTER>;)(?<KEEP2>\s|$)";
 
-        public override bool supports_ddl_transactions
-        {
-            get { return false; }
-        }
+        public override bool supports_ddl_transactions => false;
 
         public override void initialize_connections(ConfigurationPropertyHolder configuration_property_holder)
         {
@@ -80,7 +74,7 @@ namespace roundhouse.databases.oracle
 
         private static string build_connection_string(string database_name, string connection_options)
         {
-            return string.Format("Data Source={0};{1}", database_name, connection_options);
+            return $"Data Source={database_name};{connection_options}";
         }
 
         public override void set_provider()

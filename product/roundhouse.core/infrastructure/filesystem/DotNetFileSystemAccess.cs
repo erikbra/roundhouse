@@ -24,7 +24,7 @@ namespace roundhouse.infrastructure.filesystem
             this.configuration = configuration;
         }
 
-        private ConfigurationPropertyHolder configuration;
+        private readonly ConfigurationPropertyHolder configuration;
         private static readonly char[] InvalidPathCharacters = Path.GetInvalidPathChars().Append(':').ToArray();
 
 

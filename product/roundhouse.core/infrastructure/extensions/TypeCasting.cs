@@ -11,7 +11,7 @@ namespace roundhouse.infrastructure.extensions
         {
             try
             {
-                var typeToCastTo = (T) item;
+                var _ = (T) item;
                 return false;
             }
             catch

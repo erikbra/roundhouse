@@ -20,103 +20,97 @@ namespace roundhouse.databases
 
         public ConfigurationPropertyHolder configuration
         {
-            get { return database.configuration; }
-            set { database.configuration = value; }
+            get => database.configuration;
+            set => database.configuration = value;
         }
 
         public string connection_string
         {
-            get { return database.connection_string; }
-            set { database.connection_string = value; }
+            get => database.connection_string;
+            set => database.connection_string = value;
         }
 
         public string admin_connection_string
         {
-            get { return database.admin_connection_string; }
-            set { database.admin_connection_string = value; }
+            get => database.admin_connection_string;
+            set => database.admin_connection_string = value;
         }
 
         public string server_name
         {
-            get { return database.server_name; }
-            set { database.server_name = value; }
+            get => database.server_name;
+            set => database.server_name = value;
         }
 
         public string database_name
         {
-            get { return database.database_name; }
-            set { database.database_name = value; }
+            get => database.database_name;
+            set => database.database_name = value;
         }
 
         public string provider
         {
-            get { return database.provider; }
-            set { database.provider = value; }
+            get => database.provider;
+            set => database.provider = value;
         }
 
         public string roundhouse_schema_name
         {
-            get { return database.roundhouse_schema_name; }
-            set { database.roundhouse_schema_name = value; }
+            get => database.roundhouse_schema_name;
+            set => database.roundhouse_schema_name = value;
         }
 
         public string version_table_name
         {
-            get { return database.version_table_name; }
-            set { database.version_table_name = value; }
+            get => database.version_table_name;
+            set => database.version_table_name = value;
         }
 
         public string scripts_run_table_name
         {
-            get { return database.scripts_run_table_name; }
-            set { database.scripts_run_table_name = value; }
+            get => database.scripts_run_table_name;
+            set => database.scripts_run_table_name = value;
         }
 
         public string scripts_run_errors_table_name
         {
-            get { return database.scripts_run_errors_table_name; }
-            set { database.scripts_run_errors_table_name = value; }
+            get => database.scripts_run_errors_table_name;
+            set => database.scripts_run_errors_table_name = value;
         }
 
         public string user_name
         {
-            get { return database.user_name; }
-            set { database.user_name = value; }
+            get => database.user_name;
+            set => database.user_name = value;
         }
 
-        public string sql_statement_separator_regex_pattern
-        {
-            get { return database.sql_statement_separator_regex_pattern; }
-        }
+        public string sql_statement_separator_regex_pattern => database.sql_statement_separator_regex_pattern;
 
         public int command_timeout
         {
-            get { return database.command_timeout; }
-            set { database.command_timeout = value; }
+            get => database.command_timeout;
+            set => database.command_timeout = value;
         }        
         
         public int admin_command_timeout
         {
-            get { return database.admin_command_timeout; }
-            set { database.admin_command_timeout = value; }
+            get => database.admin_command_timeout;
+            set => database.admin_command_timeout = value;
         }
 
         public int restore_timeout
         {
-            get { return database.restore_timeout; }
-            set { database.restore_timeout = value; }
+            get => database.restore_timeout;
+            set => database.restore_timeout = value;
         }
 
         public bool split_batch_statements
         {
-            get { return database.split_batch_statements; }
-            set { database.split_batch_statements = value; }
+            get => database.split_batch_statements;
+            set => database.split_batch_statements = value;
         }
 
-        public bool supports_ddl_transactions
-        {
-            get { return database.supports_ddl_transactions; }
-        }
+        public bool supports_ddl_transactions => database.supports_ddl_transactions;
 
         //public IRepository repository
         //{

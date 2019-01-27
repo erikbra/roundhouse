@@ -35,7 +35,7 @@ namespace roundhouse.databases.mysql.parser
         /// <param name="delimiter">Delimiter for the statement</param>
         public ParsedStatement(string value, string delimiter)
         {
-            this.type = Type.Sql;
+            type = Type.Sql;
             this.value = value;
             this.delimiter = delimiter;
         }
@@ -53,28 +53,10 @@ namespace roundhouse.databases.mysql.parser
             this.delimiter = delimiter;
         }
 
-        public ParsedStatement.Type StatementType
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+        public Type StatementType => type;
 
-        public string Value
-        {
-            get
-            {
-                return this.value;
-            }
-        }
+        public string Value => value;
 
-        public string Delimiter
-        {
-            get
-            {
-                return this.delimiter;
-            }
-        }
+        public string Delimiter => delimiter;
     }
 }

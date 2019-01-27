@@ -28,7 +28,7 @@ namespace roundhouse.databases.mysql
 
         public override bool split_batch_statements
         {
-            get { return false; }
+            get => false;
             set
             {
                 throw new Exception(
@@ -132,9 +132,7 @@ namespace roundhouse.databases.mysql
 
         public override string delete_database_script()
         {
-            return string.Format(
-                @"DROP DATABASE IF EXISTS `{0}`;",
-                database_name);
+            return $@"DROP DATABASE IF EXISTS `{database_name}`;";
         }
 
         public override void run_database_specific_tasks()

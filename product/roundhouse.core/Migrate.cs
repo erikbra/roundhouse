@@ -53,8 +53,6 @@ namespace roundhouse
         public void Run()
         {
             RoundhouseMigrationRunner migrator = GetMigrationRunner();
-               
-
             migrator.run();
         }
 

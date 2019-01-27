@@ -42,7 +42,7 @@ namespace roundhouse.console
             }
             else
             {
-                var configuration = command_line_parser.parse_arguments_and_set_up_configuration(get_mode(operation_type));
+                var configuration = command_line_parser.parse_arguments(get_mode(operation_type));
                 set_up_configuration_and_build_the_container(configuration);
                 exit_code = run_command(operation_type, configuration);
             }
@@ -111,12 +111,6 @@ namespace roundhouse.console
             string version = VersionInformation.get_current_assembly_version();
             the_logger.InfoFormat("{0} - version {1} from http://projectroundhouse.org.", ApplicationParameters.name,
                 version);
-        }
-
-        public enum Mode
-        {
-            Normal,
-            Init
         }
 
         public static void set_up_configuration_and_build_the_container(ConfigurationPropertyHolder configuration)

@@ -79,10 +79,10 @@ namespace roundhouse.databases.sqlserver
         /// <param name="commandRetryPolicy">The retry policy that defines whether to retry a request if a command fails to be executed.</param>
         public ReliableSqlConnection(string connectionString, RetryPolicy connectionRetryPolicy, RetryPolicy commandRetryPolicy)
         {
-            this.connection_string = connectionString;
+            connection_string = connectionString;
             underlying_connection = new SqlConnection(connectionString);
-            this.connection_retry_policy = connectionRetryPolicy;
-            this.command_retry_policy = commandRetryPolicy;
+            connection_retry_policy = connectionRetryPolicy;
+            command_retry_policy = commandRetryPolicy;
         }
 
         /// <inheritdoc />
@@ -334,7 +334,7 @@ namespace roundhouse.databases.sqlserver
 
         void IDbConnection.Open()
         {
-            this.Open();
+            Open();
         }
 
         /// <summary>Closes the connection to the database.</summary>

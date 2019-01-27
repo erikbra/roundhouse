@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace roundhouse.databases
@@ -13,13 +13,7 @@ namespace roundhouse.databases
 
     public abstract class AdoNetDatabase : DefaultDatabase<IDbConnection>
     {
-        private bool split_batches_in_ado = true;
-
-        public override bool split_batch_statements
-        {
-            get { return split_batches_in_ado; }
-            set { split_batches_in_ado = value; }
-        }
+        public override bool split_batch_statements { get; set; } = true;
 
         protected IDbTransaction transaction;
 
@@ -84,10 +78,7 @@ namespace roundhouse.databases
                 transaction = null;
             }
 
-            if (repository != null)
-            {
-                repository.finish();
-            }
+            repository?.finish();
 
             if (server_connection != null)
             {

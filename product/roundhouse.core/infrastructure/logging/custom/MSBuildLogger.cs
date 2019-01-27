@@ -12,8 +12,7 @@ namespace roundhouse.infrastructure.logging.custom
 
         public MSBuildLogger(ConfigurationPropertyHolder configuration)
         {
-            var task = configuration as ITask;
-            if (task != null)
+            if (configuration is ITask task)
             {
                 build_engine = task.BuildEngine;
             }
@@ -23,9 +22,7 @@ namespace roundhouse.infrastructure.logging.custom
 
         public void log_a_debug_event_containing(string message, params object[] args)
         {
-            if (build_engine == null) return;
-
-            build_engine.LogMessageEvent(new BuildMessageEventArgs(
+            build_engine?.LogMessageEvent(new BuildMessageEventArgs(
                 string.Format(message, args),
                 string.Empty,
                 calling_task.GetType().Name,
@@ -34,13 +31,11 @@ namespace roundhouse.infrastructure.logging.custom
 
         public void log_an_info_event_containing(string message, params object[] args)
         {
-            if (build_engine == null) return;
-
-            build_engine.LogMessageEvent(new BuildMessageEventArgs(
-               string.Format(message, args),
-               string.Empty,
-               calling_task.GetType().Name,
-               MessageImportance.Normal));
+            build_engine?.LogMessageEvent(new BuildMessageEventArgs(
+                string.Format(message, args),
+                string.Empty,
+                calling_task.GetType().Name,
+                MessageImportance.Normal));
         }
 
         public void log_a_warning_event_containing(string message, params object[] args)
@@ -50,21 +45,18 @@ namespace roundhouse.infrastructure.logging.custom
             //   string.Empty,
             //   calling_task.GetType().Name,
             //   MessageImportance.High));
-            if (build_engine == null) return;
 
-            build_engine.LogWarningEvent(new BuildWarningEventArgs(
-               string.Empty,
-               string.Empty,
-               string.Empty, 0, 0, 0, 0,
-               string.Format(message, args),
-               string.Empty, calling_task.GetType().Name));
+            build_engine?.LogWarningEvent(new BuildWarningEventArgs(
+                string.Empty,
+                string.Empty,
+                string.Empty, 0, 0, 0, 0,
+                string.Format(message, args),
+                string.Empty, calling_task.GetType().Name));
         }
 
         public void log_an_error_event_containing(string message, params object[] args)
         {
-            if (build_engine == null) return;
-
-            build_engine.LogErrorEvent(new BuildErrorEventArgs(
+            build_engine?.LogErrorEvent(new BuildErrorEventArgs(
                 string.Empty,
                 string.Empty,
                 string.Empty, 0, 0, 0, 0,
@@ -77,9 +69,6 @@ namespace roundhouse.infrastructure.logging.custom
             log_an_error_event_containing(message, args);
         }
 
-        public object underlying_type
-        {
-            get { return build_engine; }
-        }
+        public object underlying_type => build_engine;
     }
 }

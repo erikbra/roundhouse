@@ -1,5 +1,3 @@
-using System;
-
 namespace roundhouse.infrastructure.logging.custom
 {
     using log4net;
@@ -38,9 +36,6 @@ namespace roundhouse.infrastructure.logging.custom
             logger.FatalFormat(message, args);
         }
 
-        public object underlying_type
-        {
-            get { return logger; }
-        }
+        public object underlying_type => logger;
     }
 }

@@ -216,10 +216,7 @@ namespace roundhouse.infrastructure.persistence
                 if (disposed) return;
 
                 disposed = true;
-                if (cleanupAction != null)
-                {
-                    cleanupAction();
-                }
+                cleanupAction?.Invoke();
             }
         }
     }

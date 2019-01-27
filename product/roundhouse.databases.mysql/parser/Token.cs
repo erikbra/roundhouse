@@ -66,36 +66,12 @@ namespace roundhouse.databases.mysql.parser
             this.column = column;
         }
 
-        public Token.Type TokenType
-        {
-            get
-            {
-                return this.type;
-            }
-        }
-        
-        public string Value
-        {
-            get
-            {
-                return this.value;
-            }
-        }
+        public Type TokenType => type;
 
-        public int  Line
-        {
-            get
-            {
-                return this.line;
-            }
-        }
+        public string Value => value;
 
-        public int Column
-        {
-            get
-            {
-                return this.column;
-            }
-        }
+        public int  Line => line;
+
+        public int Column => column;
     }
 }

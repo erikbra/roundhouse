@@ -4,7 +4,7 @@
 	{
         public static string create_roundhouse_schema(string roundhouse_schema_name)
         {
-            return string.Format(@"
+            return $@"
 CREATE OR REPLACE FUNCTION CreateRoundHouseSchema(in schemaName varchar) RETURNS void AS $$
 DECLARE t_exists integer;
 BEGIN
@@ -15,14 +15,14 @@ BEGIN
 	END IF;
 END;
 $$ LANGUAGE 'plpgsql';
-SELECT CreateRoundHouseSchema('{0}');
+SELECT CreateRoundHouseSchema('{roundhouse_schema_name}');
 DROP FUNCTION CreateRoundHouseSchema(in schemaName varchar);
-", roundhouse_schema_name);
+";
         }
 
         public static string create_roundhouse_version_table(string roundhouse_schema_name, string version_table_name)
 		 {
-		 	return string.Format(@"
+		 	return $@"
 CREATE OR REPLACE FUNCTION CreateRoundHouseVersionTable(in schName varchar, in tblName varchar) RETURNS void AS $$
 DECLARE 
     t_exists integer;
@@ -49,14 +49,14 @@ BEGIN
 	END IF;	
 END;
 $$ LANGUAGE 'plpgsql';
-SELECT CreateRoundHouseVersionTable('{0}','{1}');
+SELECT CreateRoundHouseVersionTable('{roundhouse_schema_name}','{version_table_name}');
 DROP FUNCTION CreateRoundHouseVersionTable(in schName varchar, in tblName varchar);
-", roundhouse_schema_name, version_table_name);
+";
 		 }
 
 		public static string create_roundhouse_scripts_run_table(string roundhouse_schema_name, string version_table_name, string scripts_run_table_name)
 		{
-			return string.Format(@"
+			return $@"
 CREATE OR REPLACE FUNCTION CreateRoundHouseScriptsRunTable(in schName varchar, in versionTblName varchar, in tblName varchar) RETURNS void AS $$
 DECLARE 
     t_exists integer;
@@ -89,14 +89,14 @@ BEGIN
 	END IF;
 END;
 $$ LANGUAGE 'plpgsql';
-SELECT CreateRoundHouseScriptsRunTable('{0}', '{1}', '{2}');
+SELECT CreateRoundHouseScriptsRunTable('{roundhouse_schema_name}', '{version_table_name}', '{scripts_run_table_name}');
 DROP FUNCTION CreateRoundHouseScriptsRunTable(in schName varchar, in versionTblName varchar, in tblName varchar);
-", roundhouse_schema_name, version_table_name, scripts_run_table_name);
+";
 		}
 
 		public static string create_roundhouse_scripts_run_errors_table(string roundhouse_schema_name, string scripts_run_errors_table_name)
 		{
-			return string.Format(@"
+			return $@"
 CREATE OR REPLACE FUNCTION CreateRoundHouseScriptsRunErrorsTable(in schName varchar, in tblName varchar) RETURNS void AS $$
 DECLARE 
     t_exists integer;
@@ -127,9 +127,9 @@ BEGIN
 	END IF;	
 END;
 $$ LANGUAGE 'plpgsql';
-SELECT CreateRoundHouseScriptsRunErrorsTable('{0}','{1}');
+SELECT CreateRoundHouseScriptsRunErrorsTable('{roundhouse_schema_name}','{scripts_run_errors_table_name}');
 DROP FUNCTION CreateRoundHouseScriptsRunErrorsTable(in schName varchar, in tblName varchar);
-", roundhouse_schema_name, scripts_run_errors_table_name);
+";
 		}
 	}
 }

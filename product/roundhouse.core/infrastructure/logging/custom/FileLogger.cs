@@ -17,7 +17,7 @@ namespace roundhouse.infrastructure.logging.custom
 
         private void log_message(string message)
         {
-            string dateTime = string.Format("{0:MM/dd/yyyy HH:mm:ss;ffff} ", DateTime.Now);
+            string dateTime = $"{DateTime.Now:MM/dd/yyyy HH:mm:ss;ffff} ";
             file_system.verify_or_create_directory(file_system.get_directory_name_from(log_file_path));
 
             File.AppendAllText(log_file_path, dateTime + message, System.Text.Encoding.UTF8);
@@ -48,9 +48,6 @@ namespace roundhouse.infrastructure.logging.custom
             log_message("[FATAL]: " + string.Format(message, args));
         }
 
-        public object underlying_type
-        {
-            get { return file_system; }
-        }
+        public object underlying_type => file_system;
     }
 }

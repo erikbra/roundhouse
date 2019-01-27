@@ -75,7 +75,7 @@ namespace roundhouse.databases.sqlserverce
 
         private static string build_connection_string(string server_name, string connection_options)
         {
-            return string.Format("data source={0};{1}", server_name, connection_options);
+            return $"data source={server_name};{connection_options}";
         }
 
         protected override DbProviderFactory get_db_provider_factory()
@@ -107,10 +107,7 @@ namespace roundhouse.databases.sqlserverce
             }
 
             set_repository();
-            if (repository != null)
-            {
-                repository.start(with_transaction);
-            }
+            repository?.start(with_transaction);
         }
 
         public override void run_database_specific_tasks()
@@ -136,7 +133,7 @@ namespace roundhouse.databases.sqlserverce
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Unable to open file at {0}, error was: {1}", server_name, ex.Message));
+                throw new ApplicationException($"Unable to open file at {server_name}, error was: {ex.Message}");
             }
 
             return true;
@@ -211,7 +208,8 @@ namespace roundhouse.databases.sqlserverce
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Unable to insert row in RoundhousE_ScriptsRun table. Error was {0}", ex.Message));
+                throw new ApplicationException(
+                    $"Unable to insert row in RoundhousE_ScriptsRun table. Error was {ex.Message}");
             }
         }
 
@@ -265,7 +263,8 @@ namespace roundhouse.databases.sqlserverce
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Unable to insert row in RoundhousE_ScriptsRunErrors table. Error was {0}", ex.Message));
+                throw new ApplicationException(
+                    $"Unable to insert row in RoundhousE_ScriptsRunErrors table. Error was {ex.Message}");
             }
         }
 
@@ -287,13 +286,14 @@ namespace roundhouse.databases.sqlserverce
 
                         object version = cmd.ExecuteScalar();
 
-                        return version == null ? null : version.ToString();
+                        return version?.ToString();
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Unable to get version from RoundhousE_Version table. Error was {0}", ex.Message));
+                throw new ApplicationException(
+                    $"Unable to get version from RoundhousE_Version table. Error was {ex.Message}");
             }
         }
 
@@ -350,7 +350,8 @@ namespace roundhouse.databases.sqlserverce
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Unable to insert new version in RoundhousE_Version table. Error was {0}", ex.Message));
+                throw new ApplicationException(
+                    $"Unable to insert new version in RoundhousE_Version table. Error was {ex.Message}");
             }
         }
 
@@ -380,7 +381,8 @@ namespace roundhouse.databases.sqlserverce
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Unable to retrieve script_hash from RoundhousE_ScriptsRun table. Error was {0}", ex.Message));
+                throw new ApplicationException(
+                    $"Unable to retrieve script_hash from RoundhousE_ScriptsRun table. Error was {ex.Message}");
             }
         }
 

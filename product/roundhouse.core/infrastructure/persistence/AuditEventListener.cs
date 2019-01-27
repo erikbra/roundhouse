@@ -61,8 +61,7 @@ namespace roundhouse.infrastructure.persistence
 
         public bool OnPreUpdate(PreUpdateEvent event_item)
         {
-            Auditable audit = event_item.Entity as Auditable;
-            if (audit == null)
+            if (!(event_item.Entity is Auditable audit))
             {
                 return false;
             }

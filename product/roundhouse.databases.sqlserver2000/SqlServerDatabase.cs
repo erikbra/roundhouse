@@ -12,10 +12,7 @@ namespace roundhouse.databases.sqlserver2000
     {
         private string connect_options = "Integrated Security";
 
-        public override string sql_statement_separator_regex_pattern
-        {
-            get { return @"(?<KEEP1>^(?:.)*(?:-{2}).*$)|(?<KEEP1>/{1}\*{1}[\S\s]*?\*{1}/{1})|(?<KEEP1>'{1}(?:[^']|\n[^'])*?'{1})|(?<KEEP1>^|\s)(?<BATCHSPLITTER>GO)(?<KEEP2>\s|$)"; }
-        }
+        public override string sql_statement_separator_regex_pattern => @"(?<KEEP1>^(?:.)*(?:-{2}).*$)|(?<KEEP1>/{1}\*{1}[\S\s]*?\*{1}/{1})|(?<KEEP1>'{1}(?:[^']|\n[^'])*?'{1})|(?<KEEP1>^|\s)(?<BATCHSPLITTER>GO)(?<KEEP2>\s|$)";
 
         public override void initialize_connections(ConfigurationPropertyHolder configuration_property_holder)
         {
@@ -80,7 +77,7 @@ namespace roundhouse.databases.sqlserver2000
 
         private static string build_connection_string(string server_name, string database_name, string connection_options)
         {
-            return string.Format("Server={0};initial catalog={1};{2}", server_name, database_name, connection_options);
+            return $"Server={server_name};initial catalog={database_name};{connection_options}";
         }
 
         public override void run_database_specific_tasks()

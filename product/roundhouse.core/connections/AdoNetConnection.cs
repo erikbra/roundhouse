@@ -38,8 +38,7 @@ namespace roundhouse.connections
 
         public void clear_pool()
         {
-            var sql_conn = server_connection as SqlConnection;
-            if (sql_conn != null)
+            if (server_connection is SqlConnection sql_conn)
             {
                 SqlConnection.ClearPool(sql_conn);
             }

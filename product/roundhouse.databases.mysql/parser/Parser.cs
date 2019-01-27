@@ -65,10 +65,7 @@ namespace roundhouse.databases.mysql.parser
 
         public bool AnsiQuotes
         {
-            get
-            {
-                return this.ansiQuotes;
-            }
+            get => this.ansiQuotes;
             set 
             {
                 this.ansiQuotes = value;

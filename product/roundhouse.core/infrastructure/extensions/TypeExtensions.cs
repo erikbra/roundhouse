@@ -7,7 +7,7 @@ namespace roundhouse.infrastructure.extensions
 
     public static class TypeExtensions
     {
-        public const string exception_message_typed_format = "<{0}>";
+        private const string exception_message_typed_format = "<{0}>";
 
         public static ConstructorInfo greediest_constructor(this Type type)
         {

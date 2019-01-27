@@ -53,9 +53,6 @@ namespace roundhouse.infrastructure.logging.custom
             }
         }
 
-        public object underlying_type
-        {
-            get { return the_loggers; }
-        }
+        public object underlying_type => the_loggers;
     }
 }

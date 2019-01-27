@@ -48,7 +48,7 @@ namespace roundhouse.consoles
         public string ScriptsRunErrorsTableName { get; set; }
         [Obsolete("Use EnvironmentNames")]
         public string EnvironmentName {
-            get { return EnvironmentNames.SingleOrDefault(); }
+            get => EnvironmentNames.SingleOrDefault();
             set
             {
                 EnvironmentNames.Clear();

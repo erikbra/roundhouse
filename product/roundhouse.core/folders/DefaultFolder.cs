@@ -16,9 +16,6 @@ namespace roundhouse.folders
         public string folder_name { get; set; }
         public string folder_path { get; private set; }
 
-        public string folder_full_path
-        {
-            get { return file_system.combine_paths(folder_path, folder_name); }
-        }
+        public string folder_full_path => file_system.combine_paths(folder_path, folder_name);
     }
 }

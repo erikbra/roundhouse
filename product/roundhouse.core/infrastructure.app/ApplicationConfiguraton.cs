@@ -210,8 +210,7 @@ namespace roundhouse.infrastructure.app
             // This doesn't work on macOS, at least. Try, and fail silently.
             try
             {
-                var task = configuration_property_holder as ITask;
-                if (task != null)
+                if (configuration_property_holder is ITask task)
                 {
                     Logger msbuild_logger = new MSBuildLogger(configuration_property_holder);
                     loggers.Add(msbuild_logger);
@@ -246,8 +245,7 @@ namespace roundhouse.infrastructure.app
                 log_repository.Threshold = Level.Debug;
                 foreach (log4net.Core.ILogger log in log_repository.GetCurrentLoggers())
                 {
-                    var logger = log as log4net.Repository.Hierarchy.Logger;
-                    if (logger != null)
+                    if (log is log4net.Repository.Hierarchy.Logger logger)
                     {
                         logger.Level = Level.Debug;
                     }

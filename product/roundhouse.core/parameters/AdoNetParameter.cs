@@ -11,19 +11,10 @@ namespace roundhouse.parameters
             this.parameter = parameter;
         }
 
-        public IDbDataParameter underlying_type
-        {
-            get { return parameter; }
-        }
+        public IDbDataParameter underlying_type => parameter;
 
-        public string name
-        {
-            get { return parameter != null ? parameter.ParameterName : string.Empty; }
-        }
+        public string name =>  parameter != null ? parameter.ParameterName : string.Empty;
 
-        public object value
-        {
-            get { return parameter != null ? parameter.Value : string.Empty; }
-        }
+        public object value => parameter != null ? parameter.Value : string.Empty;
     }
 }
