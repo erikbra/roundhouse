@@ -38,7 +38,7 @@
     <Reference Include="System.Data.OracleClient" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="true">
     <Compile Include="../roundhouse.tests/**/*.cs" 
              Exclude="**/bin/**;**/**/obj/**;../roundhouse.tests/sqlsplitters/MySqlStatementSplitterSpecs.cs;../roundhouse.tests/infrastructure.app/**" />
   </ItemGroup>
