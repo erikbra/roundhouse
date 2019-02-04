@@ -20,6 +20,7 @@
       <dependency id="Npgsql" version="3.2.7" />
       <dependency id="System.Data.SQLite.Core" version="1.0.109.2" />
       <dependency id="Microsoft.SqlServer.Compact" version="4.0.8876.1" />
+      <dependency id="Polly" version="6.1.2" />
     </dependencies>
 	<iconUrl>https://raw.github.com/chucknorris/roundhouse/master/nuget/RoundhousE_Logo.NuGet.jpg</iconUrl>
   </metadata>
