@@ -55,7 +55,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(SingleExecutable)' == 'true'">
-    <PublishTrimmed>true</PublishTrimmed>
+    <PublishTrimmed>false</PublishTrimmed>
     <PublishReadyToRun>false</PublishReadyToRun>
     <PublishSingleFile>true</PublishSingleFile>
     <DebugSymbols>false</DebugSymbols>

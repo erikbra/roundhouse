@@ -18,8 +18,7 @@
     <dependencies>
       <group targetFramework=".NETCoreApp3.1" />
     </dependencies>
-<!--    <iconUrl>https://raw.github.com/chucknorris/roundhouse/master/nuget/RoundhousE_Logo.NuGet.jpg</iconUrl>-->
-      <icon>images\RoundhousE_Logo.NuGet.jpg</icon>
+    <icon>images\RoundhousE_Logo.NuGet.jpg</icon>
   </metadata>
   <files>
     <file src="bin\netcoreapp3.1\publish\**\**" target="tools\netcoreapp3.1\any" />

@@ -13,10 +13,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>roundhouse db migration database migrator chucknorris</tags>
     <dependencies />
-	<iconUrl>https://raw.github.com/chucknorris/roundhouse/master/nuget/RoundhousE_Logo.NuGet.jpg</iconUrl>
+    <icon>images\RoundhousE_Logo.NuGet.jpg</icon>
   </metadata>
   <files>
     <file src="bin\net461\win7-x86\rh.exe" target="tools\" />
     <file src="..\..\docs\legal\*" target="tools\" />
+    <file src="..\..\nuget\RoundhousE_Logo.NuGet.jpg" target="images\" />
   </files>
 </package>
