@@ -33,6 +33,9 @@ nuget update -self -Verbosity quiet
 nuget restore -NonInteractive -Verbosity quiet
 
 # Create output and log dirs if they don't exist (don't know why this is necessary - works on my box...)
+If (!(Test-Path $CODEDROP)) {
+    $null = mkdir $CODEDROP;
+}
 If (!(Test-Path $PACKAGEDIR)) {
     $null = mkdir $PACKAGEDIR;
 }
@@ -62,11 +65,6 @@ msbuild /t:"Pack" product/roundhouse.tasks/roundhouse.tasks.csproj  /p:DropFolde
 
 dotnet publish -v q -nologo --no-restore product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp3.1 -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
 dotnet pack -v q -nologo --no-restore --no-build product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp3.1 -o ${PACKAGEDIR} -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
-
-
-# " * Packaging netcoreapp3.1 global tool dotnet-roundhouse`n"
-
-# nuget pack -Verbosity quiet -outputdirectory ${PACKAGEDIR} .\product\roundhouse.console\roundhouse.tool.nuspec -Properties "Version=$($gitVersion.FullSemVer);NoPackageAnalysis=true"
 
 # AppVeyor runs the test automagically, no need to run explicitly with nunit-console.exe. 
 # But we want to run the tests on localhost too.
