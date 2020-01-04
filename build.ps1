@@ -69,7 +69,7 @@ dotnet pack -v q -nologo --no-restore --no-build product/roundhouse.console -p:N
 
 "    - netcoreapp3.1 single executables"
 
-@("osx-x64","win-x64","win-x86") | % {
+@("osx-x64","win-x64","win-x86","win-arm","win-arm64","linux-x64","linux-musl-x64","linux-arm") | % {
 "         $($_)"
     dotnet publish -r $_ -o "${SINGLEEXEDIR}/$_" -p:SingleExecutable=true -v q -nologo --no-restore product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp3.1  -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU" 
 }
