@@ -52,7 +52,7 @@ This is the MySql database package.
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mysql.Data" Version="8.0.16" />
+    <PackageReference Include="Mysql.Data" Version="8.0.18" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>

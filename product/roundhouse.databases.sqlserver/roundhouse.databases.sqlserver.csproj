@@ -55,8 +55,8 @@ This is the Microsoft SQL Server database package.
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Polly" Version="7.1.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="Polly" Version="7.2.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\roundhouse.core\roundhouse.core.csproj" />

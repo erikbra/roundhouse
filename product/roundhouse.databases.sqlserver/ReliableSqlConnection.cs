@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Globalization;
 using System.Xml;
 using Polly;
@@ -346,7 +346,7 @@ namespace roundhouse.databases.sqlserver
         /// <summary>
         /// Creates and returns a SqlCommand object that is associated with the underlying SqlConnection.
         /// </summary>
-        /// <returns>A System.Data.SqlClient.SqlCommand object that is associated with the underlying connection.</returns>
+        /// <returns>A Microsoft.Data.SqlClient.SqlCommand object that is associated with the underlying connection.</returns>
         public SqlCommand CreateCommand()
         {
             return underlying_connection.CreateCommand();

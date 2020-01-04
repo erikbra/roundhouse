@@ -1,5 +1,5 @@
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using roundhouse.databases;
 using roundhouse.infrastructure.logging.custom;
 using Should;
@@ -191,7 +191,7 @@ namespace roundhouse.tests.databases
             public void has_sqlite_provider_factory()
             {
                 DbProviderFactory fac = testable_sut().factory;
-                fac.ShouldBeType<System.Data.SqlClient.SqlClientFactory>();
+                fac.ShouldBeType<Microsoft.Data.SqlClient.SqlClientFactory>();
             }
         }
 

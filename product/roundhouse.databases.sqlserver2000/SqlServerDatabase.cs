@@ -1,5 +1,5 @@
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using roundhouse.infrastructure.logging;
 
 namespace roundhouse.databases.sqlserver2000
@@ -75,7 +75,7 @@ namespace roundhouse.databases.sqlserver2000
 
         public override void set_provider()
         {
-            provider = "System.Data.SqlClient";
+            provider = "Microsoft.Data.SqlClient";
         }
 
         private static string build_connection_string(string server_name, string database_name, string connection_options)

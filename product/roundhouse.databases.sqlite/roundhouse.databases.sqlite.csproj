@@ -55,7 +55,7 @@ This is the SQLite database package.
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.110" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\roundhouse.core\roundhouse.core.csproj" />
