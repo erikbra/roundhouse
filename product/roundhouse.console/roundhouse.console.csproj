@@ -16,15 +16,13 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Version Condition="'$(Version)' == ''">1.0.0</Version>
     <NugetVersion Condition="'$(NugetVersion)' == ''">$(Version)</NugetVersion>
-<!--    <RuntimeIdentifiers>osx-x64;win-x64;win-x86</RuntimeIdentifiers>-->
+    <RuntimeIdentifiers>osx-x64;win-x64;win-x86</RuntimeIdentifiers>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <NuspecFile>roundhouse.tool.nuspec</NuspecFile>
-<!--    <PublishTrimmed>true</PublishTrimmed>-->
-<!--    <PublishReadyToRun>true</PublishReadyToRun>-->
-<!--    <PublishSingleFile>true</PublishSingleFile>-->
   </PropertyGroup>
+
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
     <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
@@ -52,7 +50,14 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
   </ItemGroup>
-    
+
+  <PropertyGroup Condition="'$(SingleExecutable)' == 'true'">
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Costura.Fody" Version="3.3.2" />
     <PackageReference Include="Fody" Version="3.3.5">
@@ -87,8 +92,6 @@
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <None Include="rh" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="rh.bat" CopyToOutputDirectory="PreserveNewest" />
     <None Include="DotnetToolSettings.xml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

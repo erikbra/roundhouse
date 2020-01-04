@@ -18,6 +18,8 @@ test:
 artifacts:
   - path: .\code_drop\packages\*.nupkg
     name: Nuget packages
+  - path: .\code_drop\singleexe\**\*
+    name: Self-contained executables
   - path: .\code_drop\log\*
     name: Logs
 

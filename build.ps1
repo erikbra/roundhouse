@@ -6,6 +6,7 @@ $root = $PSScriptRoot;
 
 $CODEDROP="$($root)/code_drop";
 $PACKAGEDIR="$($CODEDROP)/packages";
+$SINGLEEXEDIR="$($CODEDROP)/singleexe";
 $LOGDIR="$($CODEDROP)/log";
 
 $TESTOUTDIR="$($root)/product/roundhouse.tests/bin"
@@ -26,9 +27,6 @@ If ($onAppVeyor) {
     appveyor UpdateBuild -Version "$newVersion"
 }
 
-" * Updating NuGet to handle newer license metadata"
-nuget update -self -Verbosity quiet
-
 " * Restoring nuget packages"
 nuget restore -NonInteractive -Verbosity quiet
 
@@ -38,6 +36,9 @@ If (!(Test-Path $CODEDROP)) {
 }
 If (!(Test-Path $PACKAGEDIR)) {
     $null = mkdir $PACKAGEDIR;
+}
+If (!(Test-Path $SINGLEEXEDIR)) {
+    $null = mkdir $SINGLEEXEDIR;
 }
 If (!(Test-Path $LOGDIR)) {
     $null = mkdir $LOGDIR;
@@ -65,6 +66,15 @@ msbuild /t:"Pack" product/roundhouse.tasks/roundhouse.tasks.csproj  /p:DropFolde
 
 dotnet publish -v q -nologo --no-restore product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp3.1 -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
 dotnet pack -v q -nologo --no-restore --no-build product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp3.1 -o ${PACKAGEDIR} -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
+
+"    - netcoreapp3.1 single executables"
+
+@("osx-x64","win-x64","win-x86") | % {
+"         $($_)"
+    dotnet publish -r $_ -o "${SINGLEEXEDIR}/$_" -p:SingleExecutable=true -v q -nologo --no-restore product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp3.1  -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU" 
+}
+
+$onAppVeyor = $true
 
 # AppVeyor runs the test automagically, no need to run explicitly with nunit-console.exe. 
 # But we want to run the tests on localhost too.
