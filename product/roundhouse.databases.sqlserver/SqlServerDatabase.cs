@@ -5,7 +5,7 @@ namespace roundhouse.databases.sqlserver
 {
     using System;
     using System.Data;
-    using Microsoft.Data.SqlClient;
+    using System.Data.SqlClient;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -74,7 +74,7 @@ namespace roundhouse.databases.sqlserver
 
         public override void set_provider()
         {
-            provider = "Microsoft.Data.SqlClient";
+            provider = "System.Data.SqlClient";
         }
 
         private static string build_connection_string(string server_name, string database_name, string connection_options)

@@ -68,7 +68,7 @@ This is the core package, which implements the basic functionality. If you want 
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Polly" Version="7.2.0" />
     <PackageReference Include="NHibernate" Version="5.2.6" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.7.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Net.Primitives" Version="4.3.1" />

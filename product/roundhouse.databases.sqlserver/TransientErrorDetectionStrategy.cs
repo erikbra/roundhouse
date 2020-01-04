@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 
 namespace roundhouse.databases.sqlserver
 {

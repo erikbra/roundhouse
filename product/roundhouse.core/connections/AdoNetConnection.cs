@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace roundhouse.connections
 {
-    using Microsoft.Data.SqlClient;
+    using System.Data.SqlClient;
 
     public class AdoNetConnection : IConnection<IDbConnection>
     {

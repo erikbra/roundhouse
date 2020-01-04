@@ -1,7 +1,7 @@
 ﻿namespace roundhouse.infrastructure.extensions
 {
     using System.Text;
-    using Microsoft.Data.SqlClient;
+    using System.Data.SqlClient;
 
     public static class ObjectExtensions {
 
