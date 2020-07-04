@@ -28,46 +28,61 @@ namespace roundhouse.console
 {
     public class Program
     {
-        private static readonly char[] OptionsSplit = new[] { ',',';' };
+        private static readonly char[] OptionsSplit = { ',',';' };
 
-        private static readonly ILog the_logger = LogManager.GetLogger(typeof(Program));
+        public static ILog the_logger = LogManager.GetLogger(typeof(Program));
+        public static bool should_wait_for_keypress { get; set; }
+        
+#if DEBUG
+        static Program()
+        {
+            should_wait_for_keypress = true;
+        }
+#endif
 
-        private static void Main(string[] args)
+        public static int Main(string[] args)
         {
             Log4NetAppender.configure();
 
             init_security_protocol();
 
             int exit_code = 0;
+            Mode mode = get_mode(args);
 
             try
             {
                 // determine if this a call to the diff, the migrator, or the init
-                if (string.Join("|", args).to_lower().Contains("version") && args.Length == 1)
+                if (is_report_version(args))
                 {
                     report_version();
+                    return exit_code;
                 }
-                else if (string.Join("|", args).to_lower().Contains("rh.redgate.diff"))
+                
+                var cf = set_up_configuration_and_build_the_container(args, mode);
+                
+                if (is_redgate_diff(args))
                 {
-                    run_diff_utility(set_up_configuration_and_build_the_container(args));
+                    run_diff_utility(cf);
                 }
-                else if (string.Join("|", args).to_lower().Contains("isuptodate"))
+                else if (is_isuptodate(args))
                 {
-                    run_update_check(set_up_configuration_and_build_the_container(args));
+                    run_update_check(cf);
                 }
-                else if (args.Any() && args[0] == "init")
+                else if (is_init(args))
                 {
-                    var cf = set_up_configuration_and_build_the_container(args, Mode.Init);
                     init_folder(cf);
                 }
                 else
                 {
-                    var cf = set_up_configuration_and_build_the_container(args);
                     run_migrator(cf);
                 }
             }
-          
-            
+
+            catch (OptionSetException ex)
+            {
+                show_help(ex.Message, ex.options);
+                exit_code = -1;
+            }
             catch (Exception ex)
             {
                 the_logger.Error(ex.Message, ex);
@@ -75,13 +90,29 @@ namespace roundhouse.console
             }
             finally
             {
-#if DEBUG
-                System.Console.WriteLine("Press any key to continue...");
-                System.Console.ReadKey();
-#endif
-                Environment.Exit(exit_code);
+                wait_for_keypress();
+            }
+            
+            return exit_code;
+        }
+
+
+        private static void wait_for_keypress()
+        {
+            if (should_wait_for_keypress)
+            {
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
             }
         }
+
+        private static bool is_report_version(string[] args) => 
+            args.Length == 1 && args[0].TrimStart('-').Equals("version", StringComparison.InvariantCultureIgnoreCase);
+
+        private static bool is_isuptodate(string[] args) => string.Join("|", args).to_lower().Contains("isuptodate");
+        private static bool is_redgate_diff(string[] args) => string.Join("|", args).to_lower().Contains("rh.redgate.diff");
+        private static Mode get_mode(string[] args) => is_init(args) ? Mode.Init : Mode.Normal;
+        private static bool is_init(string[] args) => args.Any() && args[0] == "init";
 
         public static void report_version()
         {
@@ -405,9 +436,9 @@ namespace roundhouse.console
             {
                 option_set = merge_configuration_file(args, option_set, configuration);
             }
-            catch (OptionException)
+            catch (OptionException oe)
             {
-                show_help("Error, usage is:", option_set);
+                throw new OptionSetException("Error, usage is:", oe, option_set);
             }
 
             if (help)
@@ -452,17 +483,17 @@ namespace roundhouse.console
                         "/isuptodate" +
                         "/defaultencoding VALUE" +
                         "]", Environment.NewLine);
-                show_help(usage_message, option_set);
+                throw new OptionSetException(usage_message, option_set);
             }
 
             if (string.IsNullOrEmpty(configuration.DatabaseName) && string.IsNullOrEmpty(configuration.ConnectionString) && mode == Mode.Normal)
             {
-                show_help("Error: You must specify Database Name (/d) OR Connection String (/cs) at a minimum to use RoundhousE.", option_set);
+                throw new OptionSetException("Error: You must specify Database Name (/d) OR Connection String (/cs) at a minimum to use RoundhousE.", option_set);
             }
 
             if (configuration.Restore && string.IsNullOrEmpty(configuration.RestoreFromPath))
             {
-                show_help(
+                throw new OptionSetException(
                     "If you set Restore to true, you must specify a location for the database to be restored from (RestoreFromPath /restorefrompath).",
                     option_set);
             }
@@ -500,7 +531,7 @@ namespace roundhouse.console
                 }
                 catch(Exception ex)
                 {
-                    show_help(ex.Message, option_set);
+                    throw new OptionSetException(ex.Message, ex, option_set);
                 }
                 if(any_update)
                 {
@@ -559,7 +590,6 @@ namespace roundhouse.console
             //Console.Error.WriteLine(message);
             the_logger.Info(message);
             option_set.WriteOptionDescriptions(Console.Error);
-            Environment.Exit(-1);
         }
 
         public static void init_folder(ConfigurationPropertyHolder configuration)
