@@ -489,6 +489,33 @@ namespace roundhouse.infrastructure.commandline.options {
 			info.AddValue ("OptionName", option);
 		}
 	}
+    
+    [Serializable]
+    public class OptionSetException : Exception {
+        public OptionSet options { get; }
+
+        public OptionSetException ()
+        { }
+
+        public OptionSetException (string message, OptionSet options)
+            : base (message)
+        {
+            this.options = options;
+        }
+        
+        public OptionSetException (string message, Exception inner, OptionSet options)
+            : base (message, inner)
+        {
+            this.options = options;
+        }
+
+        [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
+        public override void GetObjectData (SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData (info, context);
+            info.AddValue ("Options", options);
+        }
+    }
 
 	public delegate void OptionAction<TKey, TValue> (TKey key, TValue value);
 
