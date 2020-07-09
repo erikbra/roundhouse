@@ -67,6 +67,13 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var cfg = get_configuration(args);
             cfg.CommandTimeout.Should().Be(CommandTimeoutTestCase.expected);
         }
+        
+        [TestCaseSource(typeof(CommandTimeoutAdminTestCase)) ]
+        public void CommandTimeoutAdmin(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.CommandTimeoutAdmin.Should().Be(CommandTimeoutAdminTestCase.expected);
+        }
            
         [TestCaseSource(typeof(AccessTokenTestCase)) ]
         public void AccessToken(params string[] args)
@@ -74,6 +81,5 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var cfg = get_configuration(args);
             cfg.AccessToken.Should().Be(AccessTokenTestCase.expected);
         }
-        
     }
 }
