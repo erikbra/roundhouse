@@ -34,7 +34,7 @@ namespace roundhouse.console
             return configuration;
         }
 
-        private void parse_arguments_and_set_up_configuration(ConfigurationPropertyHolder configuration, string[] args, Program.Mode mode)
+        public void parse_arguments_and_set_up_configuration(ConfigurationPropertyHolder configuration, string[] args, Program.Mode mode)
         {
             bool help = false;
 
