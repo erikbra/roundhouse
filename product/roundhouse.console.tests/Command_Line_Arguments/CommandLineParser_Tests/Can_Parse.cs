@@ -4,6 +4,7 @@ using NSubstitute;
 using NUnit.Framework;
 using roundhouse.consoles;
 using roundhouse.infrastructure.app;
+using roundhouse.infrastructure.commandline.options;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
@@ -327,7 +328,150 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var cfg = get_configuration(args);
             cfg.OutputPath.Should().Be(OutputPathTestCase.expected);
         }
-      
+        
+        [Test]
+        public void DisableOutput()
+        {
+            var cfg = get_configuration(new[] {"-disableoutput", "-d=db"});
+            cfg.DisableOutput.Should().BeTrue();
+
+            cfg = get_configuration(new[] {"-diZableoutput", "-d=db"});
+            cfg.DisableOutput.Should().BeFalse();
+        }
+          
+        [TestCaseSource(typeof(WarnOnOneTimeScriptChangesTestCase))]
+        public void WarnOnOneTimeScriptChanges(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.WarnOnOneTimeScriptChanges.Should().Be(WarnOnOneTimeScriptChangesTestCase.expected);
+        }
+           
+        [TestCaseSource(typeof(WarnAndIgnoreOnOneTimeScriptChangesTestCase))]
+        public void WarnAndIgnoreOnOneTimeScriptChanges(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.WarnAndIgnoreOnOneTimeScriptChanges.Should().Be(WarnAndIgnoreOnOneTimeScriptChangesTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(SilentTestCase))]
+        public void Silent(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.Silent.Should().Be(SilentTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(WithTransactionTestCase))]
+        public void WithTransaction(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.WithTransaction.Should().Be(WithTransactionTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(RecoveryModeFullTestCase))]
+        public void RecoveryModeFull(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RecoveryMode.Should().Be(RecoveryModeFullTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(RecoveryModeSimpleTestCase))]
+        public void RecoveryModeSimple(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RecoveryMode.Should().Be(RecoveryModeSimpleTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(RecoveryModeNoChangeTestCase))]
+        public void RecoveryModeNoChange(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RecoveryMode.Should().Be(RecoveryModeNoChangeTestCase.expected);
+        }
+        
+        // [TestCaseSource(typeof(UserTokensTestCaseComma))]
+        // public void UserTokensComma(params string[] args)
+        // {
+        //     var cfg = get_configuration(args);
+        //     cfg.UserTokens.Should().BeEquivalentTo(UserTokensTestCaseComma.expected);
+        // }
+        
+        [TestCaseSource(typeof(UserTokensTestCaseSemiColon))]
+        public void UserTokensSemiColon(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.UserTokens.Should().BeEquivalentTo(UserTokensTestCaseSemiColon.expected);
+        }
+           
+        [TestCaseSource(typeof(DebugTestCase))]
+        public void Debug(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.Debug.Should().Be(DebugTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(RunAllAnyTimeScriptsTestCase))]
+        public void RunAllAnyTimeScripts(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RunAllAnyTimeScripts.Should().Be(RunAllAnyTimeScriptsTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(DisableTokenReplacementTestCase))]
+        public void DisableTokenReplacement(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.DisableTokenReplacement.Should().Be(DisableTokenReplacementTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(BaselineTestCase))]
+        public void Baseline(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.Baseline.Should().Be(BaselineTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(DryRunTestCase))]
+        public void DryRun(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.DryRun.Should().Be(DryRunTestCase.expected);
+        }
+         
+        [TestCaseSource(typeof(SearchAllSubdirectoriesInsteadOfTraverseTestCase))]
+        public void SearchAllSubdirectoriesInsteadOfTraverse(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.SearchAllSubdirectoriesInsteadOfTraverse.Should().Be(
+                SearchAllSubdirectoriesInsteadOfTraverseTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(DoNotStoreScriptsRunTextTestCase))]
+        public void DoNotStoreScriptsRunText(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.DoNotStoreScriptsRunText.Should().Be(
+                DoNotStoreScriptsRunTextTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(DefaultEncodingTestCase))]
+        public void DefaultEncoding(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.DefaultEncoding.Should().Be(DefaultEncodingTestCase.expected);
+        }
+        
+          
+        [TestCaseSource(typeof(ConfigurationFileTestCase))]
+        public void ConfigurationFile(params string[] args)
+        {
+            var ex = Assert.Throws<OptionSetException>(() =>
+            {
+                var cfg = get_configuration(args);
+                cfg.ConfigurationFile.Should().Be(ConfigurationFileTestCase.expected);
+            });
+
+            ex.Message.Should().Be($"Configuration File does not exist: {ConfigurationFileTestCase.expected}");
+        }
         
     }
 }
