@@ -5,10 +5,10 @@ using log4net;
 using Newtonsoft.Json;
 using roundhouse.consoles;
 using roundhouse.databases;
-using roundhouse.infrastructure;
 using roundhouse.infrastructure.app;
 using roundhouse.infrastructure.app.tokens;
 using roundhouse.infrastructure.commandline.options;
+using static roundhouse.infrastructure.ApplicationParameters;
 
 namespace roundhouse.console
 {
@@ -16,7 +16,7 @@ namespace roundhouse.console
     {
         private static readonly char[] OptionsSplit = { ',',';' };
         
-        private ILog the_logger;
+        private readonly ILog the_logger;
 
         public CommandLineParser(ILog the_logger)
         {
@@ -50,117 +50,79 @@ namespace roundhouse.console
                          "REQUIRED: ConnectionString - As an alternative to ServerName and Database - You can provide an entire connection string instead."),
                      option => configuration.ConnectionString = option)
                 .Add("f=|files=|sqlfilesdirectory=",
-                     string.Format("SqlFilesDirectory - The directory where your SQL scripts are. Defaults to \"{0}\".",
-                                   ApplicationParameters.default_files_directory),
+                    $"SqlFilesDirectory - The directory where your SQL scripts are. Defaults to \"{default_files_directory}\".",
                      option => configuration.SqlFilesDirectory = option)
                 .Add("s=|server=|servername=|instance=|instancename=",
-                     string.Format(
-                         "ServerName - The server and instance you would like to run on. (local) and (local)\\SQL2008 are both valid values. Defaults to \"{0}\".",
-                         ApplicationParameters.default_server_name),
+                    $"ServerName - The server and instance you would like to run on. (local) and (local)\\SQL2008 are both valid values. Defaults to \"{default_server_name}\".",
                      option => configuration.ServerName = option)
                 .Add("csa=|connstringadmin=|connectionstringadministration=",
-                     string.Format(
-                         "ConnectionStringAdministration - This is used for connecting to master when you may have a different uid and password than normal."),
+                     "ConnectionStringAdministration - This is used for connecting to master when you may have a different uid and password than normal.",
                      option => configuration.ConnectionStringAdmin = option)
                 .Add("accesstoken=",
                      "AccessToken - This connection property is used to connect to a SQL Database using an access token (for example Azure AD token).",
                      option => configuration.AccessToken = option)
                 .Add("ct=|commandtimeout=",
-                     string.Format(
-                         "CommandTimeout - This is the timeout when commands are run. This is not for admin commands or restore. Defaults to \"{0}\".",
-                         ApplicationParameters.default_command_timeout),
+                    $"CommandTimeout - This is the timeout when commands are run. This is not for admin commands or restore. Defaults to \"{default_command_timeout}\".",
                      option => configuration.CommandTimeout = int.Parse(option))
                 .Add("cta=|commandtimeoutadmin=",
-                     string.Format(
-                         "CommandTimeoutAdministration - This is the timeout when administration commands are run (except for restore, which has its own). Defaults to \"{0}\".",
-                         ApplicationParameters.default_admin_command_timeout),
+                    $"CommandTimeoutAdministration - This is the timeout when administration commands are run (except for restore, which has its own). Defaults to \"{default_admin_command_timeout}\".",
                      option => configuration.CommandTimeoutAdmin = int.Parse(option))
                 //database type
                 .Add("dt=|dbt=|databasetype=",
-                     string.Format(
-                         "DatabaseType - Tells RH what type of database it is running on. This is a plugin model. This is the fully qualified name of a class that implements the interface roundhouse.sql.Database, roundhouse. If you have your own assembly, just set it next to rh.exe and set this value appropriately. Defaults to 'sqlserver' which is a synonym for '{0}'.",
-                         ApplicationParameters.default_database_type),
+                    $"DatabaseType - Tells RH what type of database it is running on. This is a plugin model. This is the fully qualified name of a class that implements the interface roundhouse.sql.Database, roundhouse. If you have your own assembly, just set it next to rh.exe and set this value appropriately. Defaults to 'sqlserver' which is a synonym for '{default_database_type}'.",
                      option => configuration.DatabaseType = option)
                 // versioning
                 .Add("r=|repo=|repositorypath=",
-                     string.Format(
-                         "RepositoryPath - The repository. A string that can be anything. Used to track versioning along with the version. Defaults to null."),
+                     "RepositoryPath - The repository. A string that can be anything. Used to track versioning along with the version. Defaults to null.",
                      option => configuration.RepositoryPath = option)
                 .Add("v=|version=",
                      "Version - Specify the version directly instead of looking in a file. If present, ignores file version options.",
                      option => configuration.Version = option)
                 .Add("vf=|versionfile=",
-                     string.Format("VersionFile - Either a .XML file, a .DLL or a .TXT or a .json file that a version can be resolved from. Defaults to \"{0}\".",
-                                   ApplicationParameters.default_version_file),
+                    $"VersionFile - Either a .XML file, a .DLL or a .TXT or a .json file that a version can be resolved from. Defaults to \"{default_version_file}\".",
                      option => configuration.VersionFile = option)
                 .Add("vx=|versionxpath=",
-                     string.Format("VersionXPath - Works in conjunction with an XML version file. Defaults to \"{0}\".",
-                                   ApplicationParameters.default_version_x_path),
+                    $"VersionXPath - Works in conjunction with an XML version file. Defaults to \"{default_version_x_path}\".",
                      option => configuration.VersionXPath = option)
                 // folders
                 .Add("ad=|alterdatabase=|alterdatabasefolder=|alterdatabasefoldername=",
-                     string.Format(
-                         "AlterDatabaseFolderName - The name of the folder where you keep your alter database scripts. Read up on token replacement. You will want to use {{DatabaseName}} here instead of specifying a database name. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_alter_database_folder_name),
+                    $"AlterDatabaseFolderName - The name of the folder where you keep your alter database scripts. Read up on token replacement. You will want to use {{DatabaseName}} here instead of specifying a database name. Will recurse through subfolders. Defaults to \"{default_alter_database_folder_name}\".",
                      option => configuration.AlterDatabaseFolderName = option)
                 .Add("racd=|runaftercreatedatabase=|runaftercreatedatabasefolder=|runaftercreatedatabasefoldername=",
-                     string.Format(
-                         "RunAfterCreateDatabaseFolderName - The name of the folder where you will keep scripts that ONLY run after a database is created.  Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_run_after_create_database_folder_name),
+                    $"RunAfterCreateDatabaseFolderName - The name of the folder where you will keep scripts that ONLY run after a database is created.  Will recurse through subfolders. Defaults to \"{default_run_after_create_database_folder_name}\".",
                      option => configuration.RunAfterCreateDatabaseFolderName = option)
                 .Add("rb=|runbefore=|runbeforeupfolder=|runbeforeupfoldername=",
-                     string.Format(
-                         "RunBeforeUpFolderName - The name of the folder where you keep scripts that you want to run before your update scripts. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_run_before_up_folder_name),
+                    $"RunBeforeUpFolderName - The name of the folder where you keep scripts that you want to run before your update scripts. Will recurse through subfolders. Defaults to \"{default_run_before_up_folder_name}\".",
                      option => configuration.RunBeforeUpFolderName = option)
                 .Add("u=|up=|upfolder=|upfoldername=",
-                     string.Format(
-                         "UpFolderName - The name of the folder where you keep your update scripts. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_up_folder_name),
+                    $"UpFolderName - The name of the folder where you keep your update scripts. Will recurse through subfolders. Defaults to \"{default_up_folder_name}\".",
                      option => configuration.UpFolderName = option)
                 .Add("do=|down=|downfolder=|downfoldername=",
-                     string.Format(
-                         "DownFolderName - The name of the folder where you keep your versioning down scripts. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_down_folder_name),
+                    $"DownFolderName - The name of the folder where you keep your versioning down scripts. Will recurse through subfolders. Defaults to \"{default_down_folder_name}\".",
                      option => configuration.DownFolderName = option)
                 .Add("rf=|runfirst=|runfirstfolder=|runfirstafterupdatefolder=|runfirstafterupdatefoldername=",
-                     string.Format(
-                         "RunFirstAfterUpdateFolderName - The name of the folder where you keep any functions, views, or sprocs that are order dependent. If you have a function that depends on a view, you definitely need the view in this folder. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_run_first_after_up_folder_name),
+                    $"RunFirstAfterUpdateFolderName - The name of the folder where you keep any functions, views, or sprocs that are order dependent. If you have a function that depends on a view, you definitely need the view in this folder. Will recurse through subfolders. Defaults to \"{default_run_first_after_up_folder_name}\".",
                      option => configuration.RunFirstAfterUpFolderName = option)
                 .Add("fu=|functions=|functionsfolder=|functionsfoldername=",
-                     string.Format(
-                         "FunctionsFolderName - The name of the folder where you keep your functions. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_functions_folder_name),
+                    $"FunctionsFolderName - The name of the folder where you keep your functions. Will recurse through subfolders. Defaults to \"{default_functions_folder_name}\".",
                      option => configuration.FunctionsFolderName = option)
                 .Add("vw=|views=|viewsfolder=|viewsfoldername=",
-                     string.Format("ViewsFolderName - The name of the folder where you keep your views. Will recurse through subfolders. Defaults to \"{0}\".",
-                                   ApplicationParameters.default_views_folder_name),
+                    $"ViewsFolderName - The name of the folder where you keep your views. Will recurse through subfolders. Defaults to \"{default_views_folder_name}\".",
                      option => configuration.ViewsFolderName = option)
                 .Add("sp=|sprocs=|sprocsfolder=|sprocsfoldername=",
-                     string.Format(
-                         "SprocsFolderName - The name of the folder where you keep your stored procedures. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_sprocs_folder_name),
+                    $"SprocsFolderName - The name of the folder where you keep your stored procedures. Will recurse through subfolders. Defaults to \"{default_sprocs_folder_name}\".",
                      option => configuration.SprocsFolderName = option)
                 .Add("trg=|triggers=|triggersfolder=|triggersfoldername=",
-                     string.Format(
-                         "TriggersFolderName - The name of the folder where you keep your triggers. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_triggers_folder_name),
+                    $"TriggersFolderName - The name of the folder where you keep your triggers. Will recurse through subfolders. Defaults to \"{default_triggers_folder_name}\".",
                      option => configuration.TriggersFolderName = option)
                 .Add("ix=|indexes=|indexesfolder=|indexesfoldername=",
-                     string.Format(
-                         "IndexesFolderName - The name of the folder where you keep your indexes. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_indexes_folder_name),
+                    $"IndexesFolderName - The name of the folder where you keep your indexes. Will recurse through subfolders. Defaults to \"{default_indexes_folder_name}\".",
                      option => configuration.IndexesFolderName = option)
                 .Add("ra=|runAfterOtherAnyTimeScripts=|runAfterOtherAnyTimeScriptsfolder=|runAfterOtherAnyTimeScriptsfoldername=",
-                     string.Format(
-                         "RunAfterOtherAnyTimeScriptsFolderName - The name of the folder where you keep scripts that will be run after all of the other any time scripts complete. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_runAfterOtherAnyTime_folder_name),
+                    $"RunAfterOtherAnyTimeScriptsFolderName - The name of the folder where you keep scripts that will be run after all of the other any time scripts complete. Will recurse through subfolders. Defaults to \"{default_runAfterOtherAnyTime_folder_name}\".",
                      option => configuration.RunAfterOtherAnyTimeScriptsFolderName = option)
                 .Add("p=|permissions=|permissionsfolder=|permissionsfoldername=",
-                     string.Format(
-                         "PermissionsFolderName - The name of the folder where you keep your permissions scripts. Will recurse through subfolders. Defaults to \"{0}\".",
-                         ApplicationParameters.default_permissions_folder_name),
+                    $"PermissionsFolderName - The name of the folder where you keep your permissions scripts. Will recurse through subfolders. Defaults to \"{default_permissions_folder_name}\".",
                      option => configuration.PermissionsFolderName = option)
                 .Add("bmg=|beforemig=|beforemigrationfolder=|beforemigrationfoldername=",
                          "BeforeMigrationFolderName - The name of the folder where you keep your scripts that needs to run before migration. Script will run outside of transaction. Will recurse through subfolders.",
@@ -170,30 +132,20 @@ namespace roundhouse.console
                      option => configuration.AfterMigrationFolderName = option)
                 // roundhouse items
                 .Add("sc=|schema=|schemaname=",
-                     string.Format(
-                         "SchemaName - This is the schema where RH stores it's tables. Once you set this a certain way, do not change this. This is definitely running with scissors and very sharp. I am allowing you to have flexibility, but because this is a knife you can still get cut if you use it wrong. I'm just saying. You've been warned. Defaults to \"{0}\".",
-                         ApplicationParameters.default_roundhouse_schema_name),
+                    $"SchemaName - This is the schema where RH stores it's tables. Once you set this a certain way, do not change this. This is definitely running with scissors and very sharp. I am allowing you to have flexibility, but because this is a knife you can still get cut if you use it wrong. I'm just saying. You've been warned. Defaults to \"{default_roundhouse_schema_name}\".",
                      option => configuration.SchemaName = option)
                 .Add("vt=|versiontable=|versiontablename=",
-                     string.Format(
-                         "VersionTableName - This is the table where RH stores versioning information. Once you set this, do not change this. This is definitely running with scissors and very sharp. Defaults to \"{0}\".",
-                         ApplicationParameters.default_version_table_name),
+                    $"VersionTableName - This is the table where RH stores versioning information. Once you set this, do not change this. This is definitely running with scissors and very sharp. Defaults to \"{default_version_table_name}\".",
                      option => configuration.VersionTableName = option)
                 .Add("srt=|scriptsruntable=|scriptsruntablename=",
-                     string.Format(
-                         "ScriptsRunTableName - This is the table where RH stores information about scripts that have been run. Once you set this a certain way, do not change this. This is definitely running with scissors and very sharp. Defaults to \"{0}\".",
-                         ApplicationParameters.default_scripts_run_table_name),
+                    $"ScriptsRunTableName - This is the table where RH stores information about scripts that have been run. Once you set this a certain way, do not change this. This is definitely running with scissors and very sharp. Defaults to \"{default_scripts_run_table_name}\".",
                      option => configuration.ScriptsRunTableName = option)
                 .Add("sret=|scriptsrunerrorstable=|scriptsrunerrorstablename=",
-                     string.Format(
-                         "ScriptsRunErrorsTableName - This is the table where RH stores information about scripts that have been run with errors. Once you set this a certain way, do not change this. This is definitelly running with scissors and very sharp. Defaults to \"{0}\".",
-                         ApplicationParameters.default_scripts_run_errors_table_name),
+                    $"ScriptsRunErrorsTableName - This is the table where RH stores information about scripts that have been run with errors. Once you set this a certain way, do not change this. This is definitelly running with scissors and very sharp. Defaults to \"{default_scripts_run_errors_table_name}\".",
                      option => configuration.ScriptsRunErrorsTableName = option)
                 //environment(s)
                 .Add("env=|environment=|environmentname=|envs=|environments=|environmentnames=",
-                     string.Format(
-                         "EnvironmentName(s) - This allows RH to be environment aware and only run scripts that are in a particular environment based on the naming of the script. LOCAL.something.ENV.sql would only be run in the LOCAL environment. Multiple environments may be specified as a comma or semicolon separated list. Defaults to \"{0}\".",
-                         ApplicationParameters.default_environment_name),
+                    $"EnvironmentName(s) - This allows RH to be environment aware and only run scripts that are in a particular environment based on the naming of the script. LOCAL.something.ENV.sql would only be run in the LOCAL environment. Multiple environments may be specified as a comma or semicolon separated list. Defaults to \"{default_environment_name}\".",
                      environmentOption =>
                      {
                          foreach (var environment in environmentOption.Split(OptionsSplit, StringSplitOptions.RemoveEmptyEntries))
@@ -232,15 +184,11 @@ namespace roundhouse.console
                      option => configuration.DoNotAlterDatabase = option != null)
                 //output
                 .Add("o=|output=|outputpath=",
-                     string.Format(
-                         "OutputPath - This is where everything related to the migration is stored. This includes any backups, all items that ran, permission dumps, logs, etc. Defaults to \"{0}\".",
-                         ApplicationParameters.default_output_path),
+                    $"OutputPath - This is where everything related to the migration is stored. This includes any backups, all items that ran, permission dumps, logs, etc. Defaults to \"{default_output_path}\".",
                      option => configuration.OutputPath = option)
                 //output
                 .Add("disableoutput",
-                     string.Format(
-                         "DisableoOutput - Disable output of backups, items ran, permissions dumps, etc. Log files are kept. Useful for example in CI environment. Defaults to \"{0}\".",
-                         ApplicationParameters.default_disable_output),
+                    $"DisableoOutput - Disable output of backups, items ran, permissions dumps, etc. Log files are kept. Useful for example in CI environment. Defaults to \"{default_disable_output}\".",
                      option => configuration.DisableOutput = option != null)
                 //warn on changes
                 .Add("w|warnononetimescriptchanges",
@@ -302,7 +250,7 @@ namespace roundhouse.console
                          {
                              if(option != null)
                              {
-                                 configuration.DefaultEncoding = System.Text.Encoding.GetEncoding(option);
+                                 configuration.DefaultEncoding = Encoding.GetEncoding(option);
                              }
                          })
                  .Add("cse|connectionstringbase64encoded",

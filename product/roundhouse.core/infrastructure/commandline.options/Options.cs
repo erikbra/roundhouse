@@ -313,7 +313,7 @@ namespace roundhouse.infrastructure.commandline.options {
 						"maxValueCount");
 			if (this.type == OptionValueType.None && maxValueCount > 1)
 				throw new ArgumentException (
-						string.Format ("Cannot provide maxValueCount of {0} for OptionValueType.None.", maxValueCount),
+                    $"Cannot provide maxValueCount of {maxValueCount} for OptionValueType.None.",
 						"maxValueCount");
 			if (Array.IndexOf (names, "<>") >= 0 && 
 					((names.Length == 1 && this.type != OptionValueType.None) ||
@@ -380,7 +380,7 @@ namespace roundhouse.infrastructure.commandline.options {
 					type = name [end];
 				else 
 					throw new ArgumentException (
-							string.Format ("Conflicting option types: '{0}' vs. '{1}'.", type, name [end]),
+                        $"Conflicting option types: '{type}' vs. '{name[end]}'.",
 							"prototype");
 				AddSeparators (name, end, seps);
 			}
@@ -390,7 +390,7 @@ namespace roundhouse.infrastructure.commandline.options {
 
 			if (count <= 1 && seps.Count != 0)
 				throw new ArgumentException (
-						string.Format ("Cannot provide key/value separators for Options taking {0} value(s).", count),
+                    $"Cannot provide key/value separators for Options taking {count} value(s).",
 						"prototype");
 			if (count > 1) {
 				if (seps.Count == 0)
@@ -412,14 +412,14 @@ namespace roundhouse.infrastructure.commandline.options {
 					case '{':
 						if (start != -1)
 							throw new ArgumentException (
-									string.Format ("Ill-formed name/value separator found in \"{0}\".", name),
+                                $"Ill-formed name/value separator found in \"{name}\".",
 									"prototype");
 						start = i+1;
 						break;
 					case '}':
 						if (start == -1)
 							throw new ArgumentException (
-									string.Format ("Ill-formed name/value separator found in \"{0}\".", name),
+                                $"Ill-formed name/value separator found in \"{name}\".",
 									"prototype");
 						seps.Add (name.Substring (start, i-start));
 						start = -1;
@@ -432,7 +432,7 @@ namespace roundhouse.infrastructure.commandline.options {
 			}
 			if (start != -1)
 				throw new ArgumentException (
-						string.Format ("Ill-formed name/value separator found in \"{0}\".", name),
+                    $"Ill-formed name/value separator found in \"{name}\".",
 						"prototype");
 		}
 
