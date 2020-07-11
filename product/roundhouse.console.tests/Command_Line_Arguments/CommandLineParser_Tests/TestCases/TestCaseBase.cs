@@ -2,11 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using log4net;
-using NSubstitute;
 using NUnit.Framework;
-using roundhouse.consoles;
-using roundhouse.infrastructure.app;
 using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
@@ -14,17 +10,17 @@ namespace roundhouse.console.tests.Command_Line_Arguments
     [TestFixture]
     public abstract class TestCaseBase<T>: IEnumerable
     {
-        private T expected;
+        private readonly string actual;
         private readonly bool add_required;
 
-        protected TestCaseBase(T expected, bool add_required)
+        protected TestCaseBase(string actual, bool add_required)
         {
-            this.expected = expected;
+            this.actual = actual;
             this.add_required = add_required;
         }
 
-        private IEnumerable<string> Compact(string f, string a) => List($"{f}{a}={expected}");
-        private IEnumerable<string> TwoSeparate(string f, string a) => List($"{f}{a}", expected.ToString());
+        private IEnumerable<string> Compact(string f, string a) => List($"{f}{a}={actual}");
+        private IEnumerable<string> TwoSeparate(string f, string a) => List($"{f}{a}", actual);
 
         private static IEnumerable<IEnumerable<string>> AddRequired(IEnumerable<IEnumerable<string>> test_cases) => 
             test_cases.Select(t => t.Concat(List("-d=database")).ToArray());
