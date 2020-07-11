@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class RunAfterOtherAnyTimeScriptsFolderNameTestCase: TestCaseBase<string>
+    public class RunAfterOtherAnyTimeScriptsFolderNameTestCase: TestCaseBase
     {
         public const string expected = "run-after-a-ny-oth-er-anytime-scripts";
         public RunAfterOtherAnyTimeScriptsFolderNameTestCase() : base(expected, true) { }

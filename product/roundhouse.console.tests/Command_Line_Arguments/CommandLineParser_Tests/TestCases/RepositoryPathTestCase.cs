@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class RepositoryPathTestCase: TestCaseBase<string>
+    public class RepositoryPathTestCase: TestCaseBase
     {
         public const string expected = "rep-os-i-tory";
         public RepositoryPathTestCase() : base(expected, true) { }

@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class ConnectionStringAdminTestCase: TestCaseBase<string>
+    public class ConnectionStringAdminTestCase: TestCaseBase
     {
         public const string expected = "sofiasf0å8";
         public ConnectionStringAdminTestCase() : base(expected, true) { }

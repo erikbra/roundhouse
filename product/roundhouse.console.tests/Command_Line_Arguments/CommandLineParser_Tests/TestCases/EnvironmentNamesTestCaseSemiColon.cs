@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class EnvironmentNamesTestCaseSemiColon: TestCaseBase<IEnumerable<string>>
+    public class EnvironmentNamesTestCaseSemiColon: TestCaseBase
     {
         private const string sep = ";";
         

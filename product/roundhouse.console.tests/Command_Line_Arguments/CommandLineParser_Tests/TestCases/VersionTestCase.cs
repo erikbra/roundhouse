@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class VersionTestCase: TestCaseBase<string>
+    public class VersionTestCase: TestCaseBase
     {
         public const string expected = "ver-si-ånn";
         public VersionTestCase() : base(expected, true) { }

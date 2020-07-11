@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class UpFolderNameTestCase: TestCaseBase<string>
+    public class UpFolderNameTestCase: TestCaseBase
     {
         public const string expected = "up-fol-der";
         public UpFolderNameTestCase() : base(expected, true) { }

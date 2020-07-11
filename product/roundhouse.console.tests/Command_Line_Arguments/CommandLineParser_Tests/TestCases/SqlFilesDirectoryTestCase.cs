@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class SqlFilesDirectoryTestCase: TestCaseBase<string>
+    public class SqlFilesDirectoryTestCase: TestCaseBase
     {
         public const string expected = "sssssssssss";
         public SqlFilesDirectoryTestCase() : base(expected, true) { }

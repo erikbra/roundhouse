@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class ScriptsRunTableNameTestCase: TestCaseBase<string>
+    public class ScriptsRunTableNameTestCase: TestCaseBase
     {
         public const string expected = "script-s-run";
         public ScriptsRunTableNameTestCase() : base(expected, true) { }

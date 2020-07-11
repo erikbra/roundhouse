@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class ViewsFolderNameTestCase: TestCaseBase<string>
+    public class ViewsFolderNameTestCase: TestCaseBase
     {
         public const string expected = "fuuuun-ctions";
         public ViewsFolderNameTestCase() : base(expected, true) { }

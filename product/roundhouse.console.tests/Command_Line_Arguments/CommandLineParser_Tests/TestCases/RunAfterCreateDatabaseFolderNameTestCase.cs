@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class RunAfterCreateDatabaseFolderNameTestCase: TestCaseBase<string>
+    public class RunAfterCreateDatabaseFolderNameTestCase: TestCaseBase
     {
         public const string expected = "run-after-you-have-humbly-created-the-storage";
         public RunAfterCreateDatabaseFolderNameTestCase() : base(expected, true) { }

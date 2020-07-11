@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class DatabaseTypeTestCase: TestCaseBase<string>
+    public class DatabaseTypeTestCase: TestCaseBase
     {
         public const string expected = "supadupabase";
         public DatabaseTypeTestCase() : base(expected, true) { }

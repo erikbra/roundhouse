@@ -3,7 +3,7 @@ using static roundhouse.console.tests.ListHelpers;
 
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
-    public class PermissionsFolderNameTestCase: TestCaseBase<string>
+    public class PermissionsFolderNameTestCase: TestCaseBase
     {
         public const string expected = "may-i-have-permission-please";
         public PermissionsFolderNameTestCase() : base(expected, true) { }

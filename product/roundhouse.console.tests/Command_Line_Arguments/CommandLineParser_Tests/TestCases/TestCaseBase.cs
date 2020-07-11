@@ -8,7 +8,7 @@ using static roundhouse.console.tests.ListHelpers;
 namespace roundhouse.console.tests.Command_Line_Arguments
 {
     [TestFixture]
-    public abstract class TestCaseBase<T>: IEnumerable
+    public abstract class TestCaseBase : IEnumerable
     {
         private readonly string actual;
         private readonly bool add_required;

@@ -158,57 +158,58 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var cfg = get_configuration(args);
             cfg.FunctionsFolderName.Should().Be(FunctionsFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(ViewsFolderNameTestCase))]
         public void ViewsFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.ViewsFolderName.Should().Be(ViewsFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(SprocsFolderNameTestCase))]
         public void SprocsFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.SprocsFolderName.Should().Be(SprocsFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(TriggersFolderNameTestCase))]
         public void TriggersFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.TriggersFolderName.Should().Be(TriggersFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(IndexesFolderNameTestCase))]
         public void IndexesFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.IndexesFolderName.Should().Be(IndexesFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(RunAfterOtherAnyTimeScriptsFolderNameTestCase))]
         public void RunAfterOtherAnyTimeScriptsFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
-            cfg.RunAfterOtherAnyTimeScriptsFolderName.Should().Be(RunAfterOtherAnyTimeScriptsFolderNameTestCase.expected);
+            cfg.RunAfterOtherAnyTimeScriptsFolderName.Should()
+                .Be(RunAfterOtherAnyTimeScriptsFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(PermissionsFolderNameTestCase))]
         public void PermissionsFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.PermissionsFolderName.Should().Be(PermissionsFolderNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(BeforeMigrationFolderNameTestCase))]
         public void BeforeMigrationFolderName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.BeforeMigrationFolderName.Should().Be(BeforeMigrationFolderNameTestCase.expected);
         }
-        
-        
+
+
         [TestCaseSource(typeof(AfterMigrationFolderNameTestCase))]
         public void AfterMigrationFolderName(params string[] args)
         {
@@ -222,41 +223,111 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var cfg = get_configuration(args);
             cfg.SchemaName.Should().Be(SchemaNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(VersionTableNameTestCase))]
         public void VersionTableName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.VersionTableName.Should().Be(VersionTableNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(ScriptsRunTableNameTestCase))]
         public void ScriptsRunTableName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.ScriptsRunTableName.Should().Be(ScriptsRunTableNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(ScriptsRunErrorsTableNameTestCase))]
         public void ScriptsRunErrorsTableName(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.ScriptsRunErrorsTableName.Should().Be(ScriptsRunErrorsTableNameTestCase.expected);
         }
-        
+
         [TestCaseSource(typeof(EnvironmentNamesTestCaseComma))]
         public void EnvironmentNamesComma(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.EnvironmentNames.Should().BeEquivalentTo(EnvironmentNamesTestCaseComma.expected);
         }
-         
+
         [TestCaseSource(typeof(EnvironmentNamesTestCaseSemiColon))]
         public void EnvironmentNamesSemiColon(params string[] args)
         {
             var cfg = get_configuration(args);
             cfg.EnvironmentNames.Should().BeEquivalentTo(EnvironmentNamesTestCaseSemiColon.expected);
         }
+
+        [Test]
+        public void Restore()
+        {
+            var cfg = get_configuration(new[] {"-restore", "-restorefrompath=pth", "-d=db"});
+            cfg.Restore.Should().BeTrue();
+
+            cfg = get_configuration(new[] {"-prest", "-d=db"});
+            cfg.Restore.Should().BeFalse();
+        }
+
+        [TestCaseSource(typeof(RestoreFromPathTestCase))]
+        public void RestoreFromPath(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RestoreFromPath.Should().Be(RestoreFromPathTestCase.expected);
+        }
+
+        [TestCaseSource(typeof(RestoreCustomOptionsTestCase))]
+        public void RestoreCustomOptions(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RestoreCustomOptions.Should().Be(RestoreCustomOptionsTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(RestoreTimeoutTestCase))]
+        public void RestoreTimeout(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.RestoreTimeout.Should().Be(RestoreTimeoutTestCase.expected);
+        }
+                
+        [TestCaseSource(typeof(CreateDatabaseCustomScriptTestCase))]
+        public void CreateDatabaseCustomScript(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.CreateDatabaseCustomScript.Should().Be(CreateDatabaseCustomScriptTestCase.expected);
+        }
+        
+        [Test]
+        public void Drop()
+        {
+            var cfg = get_configuration(new[] {"-drop", "-d=db"});
+            cfg.Drop.Should().BeTrue();
+
+            cfg = get_configuration(new[] {"-droop", "-d=db"});
+            cfg.Drop.Should().BeFalse();
+        }
+       
+        [TestCaseSource(typeof(DoNotCreateDatabaseTestCase))]
+        public void DoNotCreateDatabase(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.DoNotCreateDatabase.Should().Be(DoNotCreateDatabaseTestCase.expected);
+        }
+          
+        [TestCaseSource(typeof(DoNotAlterDatabaseTestCase))]
+        public void DoNotAlterDatabase(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.DoNotAlterDatabase.Should().Be(DoNotAlterDatabaseTestCase.expected);
+        }
+        
+        [TestCaseSource(typeof(OutputPathTestCase))]
+        public void OutputPath(params string[] args)
+        {
+            var cfg = get_configuration(args);
+            cfg.OutputPath.Should().Be(OutputPathTestCase.expected);
+        }
+      
         
     }
 }
