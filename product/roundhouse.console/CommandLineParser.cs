@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using log4net;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using roundhouse.consoles;
 using roundhouse.databases;
@@ -16,9 +16,9 @@ namespace roundhouse.console
     {
         private static readonly char[] OptionsSplit = { ',',';' };
         
-        private ILog the_logger;
+        private ILogger the_logger;
 
-        public CommandLineParser(ILog the_logger)
+        public CommandLineParser(ILogger the_logger)
         {
             this.the_logger = the_logger;
         }
@@ -340,7 +340,7 @@ namespace roundhouse.console
 
             if (help)
             {
-                the_logger.Info("Usage of RoundhousE (RH)");
+                the_logger.LogInformation("Usage of RoundhousE (RH)");
                 string usage_message =
                     string.Format(
                         "rh.exe /d[atabase] VALUE OR rh.exe /c[onnection]s[tring] VALUE followed by all the optional parameters {0}" +

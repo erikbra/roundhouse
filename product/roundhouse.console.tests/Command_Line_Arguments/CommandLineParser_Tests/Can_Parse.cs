@@ -1,5 +1,6 @@
 using FluentAssertions;
 using log4net;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using roundhouse.consoles;
@@ -10,12 +11,12 @@ namespace roundhouse.console.tests.Command_Line_Arguments
     public class Can_Parse
     {
         private CommandLineParser parser;
-        private ILog the_logger;
+        private ILogger the_logger;
 
         [SetUp]
         public void SetUp()
         {
-            the_logger = Substitute.For<ILog>();
+            the_logger = Substitute.For<ILogger>();
             parser = new CommandLineParser(the_logger);
         }
 

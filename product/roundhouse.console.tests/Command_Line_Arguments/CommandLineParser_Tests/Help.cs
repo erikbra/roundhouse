@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using log4net;
+using Microsoft.Extensions.Logging;
 using NHibernate.Cfg.ConfigurationSchema;
 using NSubstitute;
 using NUnit.Framework;
@@ -16,12 +17,12 @@ namespace roundhouse.console.tests.Command_Line_Arguments
     public class Help
     {
         private CommandLineParser parser;
-        private ILog the_logger;
+        private ILogger the_logger;
 
         [SetUp]
         public void SetUp()
         {
-            the_logger = Substitute.For<ILog>();
+            the_logger = Substitute.For<ILogger>();
             parser = new CommandLineParser(the_logger);
         }
 
@@ -36,7 +37,7 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             );
 
             ex.Message.Should().StartWith("rh.exe");
-            the_logger.ReceivedWithAnyArgs().Info(Arg.Any<string>());
+            the_logger.ReceivedWithAnyArgs().LogInformation(Arg.Any<string>());
         }
 
         static IEnumerable<string> HelpCases()
