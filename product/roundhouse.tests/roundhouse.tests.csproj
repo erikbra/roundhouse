@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
+    <TargetFrameworks>net5.0;net461</TargetFrameworks>
     <CLSCompliant>true</CLSCompliant>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <OutputType>Library</OutputType>
@@ -31,7 +31,6 @@
     <PackageReference Include="Should" Version="1.1.20" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.110" />
     <PackageReference Include="TinySpec.NUnit" Version="0.9.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <Reference Include="System.Data.OracleClient" />

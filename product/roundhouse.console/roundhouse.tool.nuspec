@@ -16,12 +16,12 @@
       <packageType name="DotnetTool" />
     </packageTypes>
     <dependencies>
-      <group targetFramework=".NETCoreApp2.1" />
+      <group targetFramework="net5" />
     </dependencies>
     <icon>images/RoundhousE_Logo.NuGet.jpg</icon>
   </metadata>
   <files>
-    <file src="bin/netcoreapp2.1/publish/**/**" target="tools/netcoreapp2.1/any" />
+    <file src="bin/net5.0/publish/**/**" target="tools/net5.0/any" />
     <file src="../../nuget/RoundhousE_Logo.NuGet.jpg" target="images/" />
   </files>
 </package>
