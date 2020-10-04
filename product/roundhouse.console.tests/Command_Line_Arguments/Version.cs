@@ -21,7 +21,7 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var args = new[] {"--version"};
             var logger = Substitute.For<ILogger>();
             
-            var svc = new RoundhouseService(logger, new MainOperations(), new CommandLineParser(logger), false);
+            var svc = new RoundhouseService(logger, new MainOperations(), new CommandLineParser(logger), new CommandLineArguments() { args = args}, false);
             svc.execute(args);
 
             logger.ReceivedWithAnyArgs().LogInformation(Arg.Any<string>(), Arg.Any<object>(), Arg.Any<object>());
@@ -38,7 +38,7 @@ namespace roundhouse.console.tests.Command_Line_Arguments
             var args = new[] {"yeyeyeversionyeye"};
             var logger = Substitute.For<ILogger>();
             
-            var svc = new RoundhouseService(logger, new MainOperations(), new CommandLineParser(logger), false);
+            var svc = new RoundhouseService(logger, new MainOperations(), new CommandLineParser(logger), new CommandLineArguments() {args = args},  false);
             svc.execute(args);
             
             logger.DidNotReceiveWithAnyArgs().LogInformation(Arg.Any<string>(), Arg.Any<object>(), Arg.Any<object>());

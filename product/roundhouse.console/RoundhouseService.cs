@@ -1,9 +1,12 @@
 using System;
 using System.Net;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using log4net;
 using log4net.Core;
 using log4net.Repository;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using roundhouse.infrastructure;
 using roundhouse.infrastructure.app;
@@ -14,7 +17,7 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace roundhouse.console
 {
-    public class RoundhouseService
+    public class RoundhouseService: IHostedService 
     {
         private ILogger the_logger;
 
@@ -26,12 +29,14 @@ namespace roundhouse.console
 
         private IMainOperations main_operations;
         private CommandLineParser command_line_parser;
-        
-        public RoundhouseService(ILogger the_logger, IMainOperations main_operations, CommandLineParser command_line_parser, bool? should_wait_for_keypress)
+        private readonly CommandLineArguments arguments;
+
+        public RoundhouseService(ILogger the_logger, IMainOperations main_operations, CommandLineParser command_line_parser, CommandLineArguments arguments, bool? should_wait_for_keypress)
         {
             this.the_logger = the_logger;
             this.main_operations = main_operations;
             this.command_line_parser = command_line_parser;
+            this.arguments = arguments;
             this.should_wait_for_keypress = should_wait_for_keypress ?? this.should_wait_for_keypress;
         }
         
@@ -154,6 +159,17 @@ namespace roundhouse.console
             
             runner.run();
             return 0;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            this.execute(this.arguments.args);
+            await Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }
