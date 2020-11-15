@@ -28,12 +28,10 @@ namespace roundhouse.databases.mysql
 
         public override bool split_batch_statements
         {
-            get { return false; }
-            set
-            {
+            get => false;
+            set =>
                 throw new Exception(
                     "This option can not be changed because MySQL database migrator always splits batch statements by using MySqlScript class from MySQL ADO.NET provider");
-            }
         }
 
         protected override DbProviderFactory get_db_provider_factory()

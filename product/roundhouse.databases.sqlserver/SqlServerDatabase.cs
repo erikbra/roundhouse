@@ -1,4 +1,6 @@
 using System.Data.Common;
+using System.Data.SqlClient;
+using Polly;
 using roundhouse.databases.sqlserver.db_definitions;
 using roundhouse.db_definitions;
 
