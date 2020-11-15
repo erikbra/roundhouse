@@ -201,11 +201,7 @@ namespace roundhouse.databases
 
         public abstract void run_database_specific_tasks();
 
-        public virtual void create_or_update_roundhouse_tables()
-        {
-            SchemaUpdate s = new SchemaUpdate(repository.nhibernate_configuration);
-            s.Execute(false, true);
-        }
+        public abstract void create_or_update_roundhouse_tables();
 
         public virtual void run_sql(string sql_to_run, ConnectionType connection_type)
         {
@@ -244,6 +240,8 @@ namespace roundhouse.databases
                                             one_time_script = run_this_script_once
                                         };
 
+            fill_in_audit_info(script_run);
+
             var sql = get_insert_sql(script_run);
 
             try
@@ -260,6 +258,13 @@ namespace roundhouse.databases
             }
         }
 
+        private static void fill_in_audit_info(Auditable auditable)
+        {
+            auditable.entry_date = DateTime.Now;
+            auditable.entered_by = Environment.UserName;
+            auditable.modified_date = DateTime.Now;
+        }
+
         protected abstract string get_insert_sql<T>(T item) where T: Auditable;
 
         public virtual void insert_script_run_error(string script_name, string sql_to_run, string sql_erroneous_part, string error_message, string repository_version,
@@ -274,6 +279,7 @@ namespace roundhouse.databases
                                                        repository_path = repository_path ?? string.Empty,
                                                        error_message = error_message,
                                                    };
+            fill_in_audit_info(script_run_error);
 
             var sql = get_insert_sql(script_run_error);
             
@@ -331,6 +337,8 @@ namespace roundhouse.databases
                     version = repository_version ?? string.Empty,
                     repository_path = repository_path ?? string.Empty,
                 };
+                    
+                fill_in_audit_info(version);
                 
                 var sql = get_insert_sql(version);
             

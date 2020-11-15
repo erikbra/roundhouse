@@ -1,11 +1,11 @@
 using System.Data.Common;
-using Polly;
+using roundhouse.databases.sqlserver.db_definitions;
+using roundhouse.db_definitions;
 
 namespace roundhouse.databases.sqlserver
 {
     using System;
     using System.Data;
-    using System.Data.SqlClient;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -131,6 +131,12 @@ namespace roundhouse.databases.sqlserver
 
             Log.bound_to(this).log_a_debug_event_containing("FUTURE ENHANCEMENT: This should remove a user named RoundhousE if one exists (migration from SQL2000 up)");
             //TODO: Delete RoundhousE user if it exists (i.e. migration from SQL2000 to 2005)
+        }
+
+        public override void create_or_update_roundhouse_tables()
+        {
+            ISchemaDefinitions schema_definitions = new SqlServerSchemaDefinitions(this);
+            schema_definitions.CreateRoundhouseSchemaTables();
         }
 
         public void create_roundhouse_schema_if_it_doesnt_exist()

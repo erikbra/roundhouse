@@ -77,7 +77,7 @@ This is the core package, which implements the basic functionality. If you want 
   <ItemGroup>
     <EmbeddedResource Include="infrastructure.app\logging\log4net.config.xml" />
     <EmbeddedResource Include="infrastructure.app\logging\log4net.config.no.console.xml" />
-    <None Include="../../nuget/RoundhousE_Logo.NuGet.jpg" Pack="true" PackagePath="/images"/>
+    <None Include="../../nuget/RoundhousE_Logo.NuGet.jpg" Pack="true" PackagePath="/images" />
   </ItemGroup>
   <!-- Copy to drop folder after packaging -->
   <Target Name="CopyToDropFolder" AfterTargets="Pack" Condition="'$(DropFolder)' != ''">
