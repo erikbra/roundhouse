@@ -1,7 +1,6 @@
 namespace roundhouse.infrastructure.persistence
 {
     using System;
-    using logging;
     using NHibernate;
     using NHibernate.Cfg;
 
@@ -65,57 +64,6 @@ namespace roundhouse.infrastructure.persistence
                 
             }
             session = null;
-        }
-
-        public void save_or_update<T>(T item) where T : class
-        {
-            if (item == null)
-            {
-                Log.bound_to(this).log_a_warning_event_containing("Please ensure you send a non null record to save.");
-                return;
-            }
-
-            using (ensure_session_started())
-            {
-                session.SaveOrUpdate(item);
-                session.Flush();
-            }
-
-            Log.bound_to(this).log_a_debug_event_containing("Saved item of type {0} successfully.", typeof(T).Name);
-        }
-
-        private IDisposable ensure_session_started()
-        {
-            bool running_long_session = session != null;
-            if (running_long_session)
-            {
-                return null;
-            }
-
-            start(using_transaction: false);
-            return new Cleanup(finish);
-        }
-
-        private class Cleanup : IDisposable
-        {
-            private readonly Action cleanupAction;
-            private bool disposed;
-
-            public Cleanup(Action cleanupAction)
-            {
-                this.cleanupAction = cleanupAction;
-            }
-
-            public void Dispose()
-            {
-                if (disposed) return;
-
-                disposed = true;
-                if (cleanupAction != null)
-                {
-                    cleanupAction();
-                }
-            }
         }
     }
 }

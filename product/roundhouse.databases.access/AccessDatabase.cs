@@ -100,7 +100,6 @@ namespace roundhouse.databases.access
             if (with_transaction)
             {
                 transaction = server_connection.underlying_type().BeginTransaction();
-                repository.start(true);
             }
         }
 

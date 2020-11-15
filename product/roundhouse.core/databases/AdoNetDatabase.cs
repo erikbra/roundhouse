@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using Dapper;
+using roundhouse.model;
+using Version = System.Version;
 
 namespace roundhouse.databases
 {
@@ -72,7 +76,6 @@ namespace roundhouse.databases
             if (with_transaction)
             {
                 transaction = server_connection.underlying_type().BeginTransaction();
-                repository.start(true);
             }
         }
 
@@ -83,11 +86,6 @@ namespace roundhouse.databases
             {
                 transaction.Commit();
                 transaction = null;
-            }
-
-            if (repository != null)
-            {
-                repository.finish();
             }
 
             if (server_connection != null)
@@ -102,7 +100,6 @@ namespace roundhouse.databases
         public override void rollback()
         {
             Log.bound_to(this).log_a_debug_event_containing("Rolling back changes");
-            repository.rollback();
 
             if (transaction != null)
             {
@@ -114,12 +111,11 @@ namespace roundhouse.databases
                 server_connection.open();
                 //use_database(database_name);
                 transaction = server_connection.underlying_type().BeginTransaction();
-                repository.start(true);
             }
         }
 
         protected override void run_sql(string sql_to_run, ConnectionType connection_type,
-            IList<IParameter<IDbDataParameter>> parameters)
+            IList<IParameter> parameters)
         {
             if (string.IsNullOrEmpty(sql_to_run))
             {
@@ -136,6 +132,18 @@ namespace roundhouse.databases
             }
         }
         
+        protected override void run_sql(string sql_to_run, ConnectionType connection_type,
+            object parameters)
+        {
+            if (string.IsNullOrEmpty(sql_to_run))
+            {
+                return;
+            }
+            
+            var connection = get_db_connection(connection_type);
+            retry_policy.Execute(() => connection.underlying_type().Execute(sql_to_run, parameters, transaction));
+        }
+        
         protected override IEnumerable<T> run_sql_query<T>(string sql_to_run, ConnectionType connection_type,
             object parameters)
         {
@@ -149,7 +157,7 @@ namespace roundhouse.databases
         }
 
         private void run_command_with(string sql_to_run, ConnectionType connection_type,
-            IList<IParameter<IDbDataParameter>> parameters)
+            IList<IParameter> parameters)
         {
             using (IDbCommand command = setup_database_command(sql_to_run, connection_type, parameters))
             {
@@ -158,7 +166,7 @@ namespace roundhouse.databases
         }
 
         protected override object run_sql_scalar(string sql_to_run, ConnectionType connection_type,
-            IList<IParameter<IDbDataParameter>> parameters)
+            IList<IParameter> parameters)
         {
             object return_value = new object();
             if (string.IsNullOrEmpty(sql_to_run))
@@ -180,6 +188,50 @@ namespace roundhouse.databases
 
             return return_value;
         }
+
+        protected override string get_insert_sql<T>(T item) 
+        {
+            var tableName = get_table_name<T>(item);
+            var columns = get_columns_with_values(item);
+
+            var sql = new StringBuilder($@"
+INSERT INTO {roundhouse_schema_name}.{tableName}
+(
+");
+            foreach (var column in columns)
+            {
+                sql.Append(column.Key);
+                sql.AppendLine(",");
+            }
+
+            sql.AppendLine(")");
+            sql.AppendLine("VALUES(");
+            
+            foreach (var column in columns)
+            {
+                sql.Append("@");
+                sql.Append(column.Key);
+                sql.AppendLine(",");
+            }
+            sql.AppendLine(";");
+
+            return sql.ToString();
+        }
+
+        private IDictionary<string, object> get_columns_with_values<T>(T item) =>
+            typeof(T)
+                .GetProperties()
+                .ToDictionary(prop => prop.Name, prop => prop.GetValue(item));
+
+        private string get_table_name<T>(T item) =>
+            item switch
+            {
+                ScriptsRun _ => scripts_run_table_name,
+                ScriptsRunError _ => scripts_run_errors_table_name,
+                Version _ => version_table_name,
+                _ => throw new ArgumentException("Unknown type: " + typeof(T), nameof(item))
+            };
+       
 
         protected IConnection<IDbConnection> get_db_connection(ConnectionType connection_type) =>
             connection_type switch
@@ -214,7 +266,7 @@ namespace roundhouse.databases
         
 
         protected IDbCommand setup_database_command(string sql_to_run, ConnectionType connection_type,
-            IEnumerable<IParameter<IDbDataParameter>> parameters)
+            IEnumerable<IParameter> parameters)
         {
             IDbCommand command = null;
 
@@ -249,7 +301,7 @@ namespace roundhouse.databases
 
             if (parameters != null)
             {
-                foreach (IParameter<IDbDataParameter> parameter in parameters)
+                foreach (IParameter parameter in parameters)
                 {
                     command.Parameters.Add(parameter.underlying_type);
                 }

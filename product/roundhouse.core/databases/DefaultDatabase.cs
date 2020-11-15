@@ -225,11 +225,13 @@ namespace roundhouse.databases
             return run_sql_query<T>(sql_to_run, connection_type, null);
         }
 
-        protected abstract void run_sql(string sql_to_run, ConnectionType connection_type, IList<IParameter<IDbDataParameter>> parameters);
+        protected abstract void run_sql(string sql_to_run, ConnectionType connection_type, IList<IParameter> parameters);
 
-        protected abstract object run_sql_scalar(string sql_to_run, ConnectionType connection_type, IList<IParameter<IDbDataParameter>> parameters);
+        protected abstract object run_sql_scalar(string sql_to_run, ConnectionType connection_type, IList<IParameter> parameters);
 
         protected abstract IEnumerable<T> run_sql_query<T>(string sql_to_run, ConnectionType connection_type, object parameters);
+        
+        protected abstract void run_sql(string sql_to_run, ConnectionType connection_type, object parameters);
 
         public virtual void insert_script_run(string script_name, string sql_to_run, string sql_to_run_hash, bool run_this_script_once, long version_id)
         {
@@ -242,9 +244,11 @@ namespace roundhouse.databases
                                             one_time_script = run_this_script_once
                                         };
 
+            var sql = get_insert_sql(script_run);
+
             try
             {
-                retry_policy.Execute(() => repository.save_or_update(script_run));
+                retry_policy.Execute(() => run_sql(sql, ConnectionType.Default, script_run));
                 scripts_cache[script_name] = script_run;
             }
             catch (Exception ex)
@@ -255,6 +259,8 @@ namespace roundhouse.databases
                 throw;
             }
         }
+
+        protected abstract string get_insert_sql<T>(T item) where T: Auditable;
 
         public virtual void insert_script_run_error(string script_name, string sql_to_run, string sql_erroneous_part, string error_message, string repository_version,
                                             string repository_path)
@@ -269,9 +275,11 @@ namespace roundhouse.databases
                                                        error_message = error_message,
                                                    };
 
+            var sql = get_insert_sql(script_run_error);
+            
             try
             {
-                retry_policy.Execute(() => repository.save_or_update(script_run_error));
+                retry_policy.Execute(() => run_sql(sql, ConnectionType.Default, script_run_error));
             }
             catch (Exception ex)
             {
@@ -323,10 +331,12 @@ namespace roundhouse.databases
                     version = repository_version ?? string.Empty,
                     repository_path = repository_path ?? string.Empty,
                 };
-
+                
+                var sql = get_insert_sql(version);
+            
                 try
                 {
-                    retry_policy.Execute(() => repository.save_or_update(version));
+                    retry_policy.Execute(() => run_sql(sql, ConnectionType.Default, version));
                     version_id = version.id;
                 }
                 catch (Exception ex)

@@ -150,7 +150,7 @@ namespace roundhouse.databases.oracle
         {
             if (!is_dry_run)
             {
-                var insert_parameters = new List<IParameter<IDbDataParameter>>
+                var insert_parameters = new List<IParameter>
                                         {
                                             create_parameter("repository_path", DbType.AnsiString, repository_path, 255),
                                             create_parameter("repository_version", DbType.AnsiString, repository_version, 35),
@@ -159,7 +159,7 @@ namespace roundhouse.databases.oracle
                 run_sql(insert_version_script(), ConnectionType.Default, insert_parameters);
             }
             
-            var select_parameters = new List<IParameter<IDbDataParameter>> { create_parameter("repository_path", DbType.AnsiString, repository_path, 255) };
+            var select_parameters = new List<IParameter> { create_parameter("repository_path", DbType.AnsiString, repository_path, 255) };
             return Convert.ToInt64(run_sql_scalar(get_version_id_script(), ConnectionType.Default, select_parameters));
         }
 
@@ -170,7 +170,7 @@ namespace roundhouse.databases.oracle
             base.run_sql(sql_to_run.Replace("\r\n", "\n"), connection_type);
         }
 
-        protected override object run_sql_scalar(string sql_to_run, ConnectionType connection_type, IList<IParameter<IDbDataParameter>> parameters)
+        protected override object run_sql_scalar(string sql_to_run, ConnectionType connection_type, IList<IParameter> parameters)
         {
             Log.bound_to(this).log_a_debug_event_containing("Replacing \r\n with \n to be compliant with Oracle.");
             //http://www.barrydobson.com/2009/02/17/pls-00103-encountered-the-symbol-when-expecting-one-of-the-following/
@@ -191,7 +191,7 @@ namespace roundhouse.databases.oracle
         /// <summary>
         /// This DOES NOT use the ADMIN connection. Use sparingly.
         /// </summary>
-        private IParameter<IDbDataParameter> create_parameter(string name, DbType type, object value, int? size)
+        private IParameter create_parameter(string name, DbType type, object value, int? size)
         {
             IDbCommand command = server_connection.underlying_type().CreateCommand();
             var parameter = command.CreateParameter();

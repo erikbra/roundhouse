@@ -107,10 +107,6 @@ namespace roundhouse.databases.sqlserverce
             }
 
             set_repository();
-            if (repository != null)
-            {
-                repository.start(with_transaction);
-            }
         }
 
         public override void run_database_specific_tasks()

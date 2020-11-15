@@ -1,8 +1,10 @@
+using System.Data;
+
 namespace roundhouse.parameters
 {
-    public interface IParameter<T>
+    public interface IParameter
     {
-        T underlying_type {get;}
+        IDbDataParameter underlying_type {get;}
         string name {get;}
         object value{get;}
     }

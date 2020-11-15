@@ -2,7 +2,7 @@ namespace roundhouse.parameters
 {
     using System.Data;
 
-    public class AdoNetParameter : IParameter<IDbDataParameter>
+    public class AdoNetParameter : IParameter
     {
         private readonly IDbDataParameter parameter;
 
