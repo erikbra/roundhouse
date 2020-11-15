@@ -43,7 +43,7 @@ $file = $(Get-ChildItem -Recurse -Include MySql.Data.dll ~/.nuget/packages/mysql
 
 
 " * Building and packaging"
-msbuild /t:"Build" /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
+dotnet msbuild /t:"Build" /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
 
 "    - NuGet libraries"
 dotnet pack -nologo --no-build -v q -p:Version="$($gitVersion.FullSemVer)" -p:NoPackageAnalysis=true -p:Configuration=Build -p:Platform="Any CPU" -o ${PACKAGEDIR}
@@ -52,17 +52,13 @@ dotnet pack -nologo --no-build -v q -p:Version="$($gitVersion.FullSemVer)" -p:No
 "    - net461 command-line nuget package"
 
 nuget pack product/roundhouse.console/roundhouse.nuspec -OutputDirectory "$CODEDROP/packages" -Verbosity quiet -NoPackageAnalysis -Version "$($gitVersion.FullSemVer)" 
-msbuild /t:"Pack" product/roundhouse.tasks/roundhouse.tasks.csproj  /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.roundhouse.tasks.pack.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
+dotnet msbuild /t:"Pack" product/roundhouse.tasks/roundhouse.tasks.csproj  /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.roundhouse.tasks.pack.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
 
-"    - netcoreapp2.1 global tool dotnet-roundhouse"
+"    - net5.0 global tool dotnet-roundhouse"
 
-dotnet publish -v q -nologo --no-restore product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp2.1 -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
-dotnet pack -v q -nologo --no-restore --no-build product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=netcoreapp2.1 -o ${PACKAGEDIR} -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
+dotnet publish -v q -nologo --no-restore product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=net5.0 -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
+dotnet pack -v q -nologo --no-restore --no-build product/roundhouse.console -p:NoPackageAnalysis=true -p:TargetFramework=net5.0 -o ${PACKAGEDIR} -p:Version="$($gitVersion.FullSemVer)" -p:Configuration=Build -p:Platform="Any CPU"
 
-
-# " * Packaging netcoreapp2.1 global tool dotnet-roundhouse`n"
-
-# nuget pack -Verbosity quiet -outputdirectory ${PACKAGEDIR} .\product\roundhouse.console\roundhouse.tool.nuspec -Properties "Version=$($gitVersion.FullSemVer);NoPackageAnalysis=true"
 
 # AppVeyor runs the test automagically, no need to run explicitly with nunit-console.exe. 
 # But we want to run the tests on localhost too.

@@ -4,7 +4,7 @@ namespace roundhouse.tests.infrastructure.app
 {
     using consoles;
     using roundhouse.infrastructure.app;
-    using Should;
+    using Shouldly;
 
     public class DefaultConfigurationSpecs
     {
@@ -36,11 +36,11 @@ namespace roundhouse.tests.infrastructure.app
 
 #pragma warning disable CS0618 // Type or member is obsolete
                 dict.TryGetValue(nameof(ConfigurationPropertyHolder.EnvironmentName), out var environment_name).ShouldBeTrue();
-                environment_name.ShouldEqual("Environment1");
+                environment_name.ShouldBe("Environment1");
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 dict.TryGetValue(nameof(ConfigurationPropertyHolder.EnvironmentNames), out var environment_names).ShouldBeTrue();
-                environment_names.ShouldEqual("Environment1");
+                environment_names.ShouldBe("Environment1");
 
             }
 
@@ -64,11 +64,11 @@ namespace roundhouse.tests.infrastructure.app
 
 #pragma warning disable CS0618 // Type or member is obsolete
                 dict.TryGetValue(nameof(ConfigurationPropertyHolder.EnvironmentName), out var environment_name).ShouldBeTrue();
-                environment_name.ShouldEqual("Environment1,Environment2");
+                environment_name.ShouldBe("Environment1,Environment2");
 #pragma warning restore CS0618 // Type or member is obsolete
 
                 dict.TryGetValue(nameof(ConfigurationPropertyHolder.EnvironmentNames), out var environment_names).ShouldBeTrue();
-                environment_names.ShouldEqual("Environment1,Environment2");
+                environment_names.ShouldBe("Environment1,Environment2");
 
             }
 
@@ -93,7 +93,7 @@ namespace roundhouse.tests.infrastructure.app
                 var dict = configuration.to_token_dictionary();
 
                 dict.TryGetValue("UserId", out var user_id).ShouldBeTrue();
-                user_id.ShouldEqual("1");
+                user_id.ShouldBe("1");
 
             }
 
@@ -119,7 +119,7 @@ namespace roundhouse.tests.infrastructure.app
                 var dict = configuration.to_token_dictionary();
 
                 dict.TryGetValue("ServerName", out var server_name).ShouldBeTrue();
-                server_name.ShouldEqual("overridden");
+                server_name.ShouldBe("overridden");
 
             }
 

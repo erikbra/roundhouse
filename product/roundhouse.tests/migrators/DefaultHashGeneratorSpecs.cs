@@ -1,6 +1,6 @@
 ﻿using roundhouse.cryptography;
 using roundhouse.migrators;
-using Should;
+using Shouldly;
 
 namespace roundhouse.tests.migrators
 {

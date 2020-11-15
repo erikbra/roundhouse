@@ -2,7 +2,7 @@ using roundhouse.consoles;
 using roundhouse.databases;
 using roundhouse.environments;
 using roundhouse.migrators;
-using Should;
+using Shouldly;
 
 namespace roundhouse.tests.migrators
 {

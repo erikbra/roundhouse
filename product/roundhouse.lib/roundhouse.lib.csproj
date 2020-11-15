@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <CLSCompliant>true</CLSCompliant>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -55,10 +55,10 @@ This is an "include all" package that gives you all the databases. If you want o
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+  <!-- <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <ProjectReference Include="..\roundhouse.databases.oracle\roundhouse.databases.oracle.csproj" />
     <ProjectReference Include="..\roundhouse.databases.access\roundhouse.databases.access.csproj" />
-  </ItemGroup>
+  </ItemGroup> -->
   <ItemGroup>
     <ProjectReference Include="..\roundhouse.databases.mysql\roundhouse.databases.mysql.csproj" />
     <ProjectReference Include="..\roundhouse.databases.postgresql\roundhouse.databases.postgresql.csproj" />
@@ -69,12 +69,12 @@ This is an "include all" package that gives you all the databases. If you want o
     <ProjectReference Include="..\roundhouse.core\roundhouse.core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+  <!-- <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
+  </ItemGroup> -->
     
   <ItemGroup>
     <None Include="..\..\docs\logo\roundhouse.ico">
@@ -87,7 +87,7 @@ This is an "include all" package that gives you all the databases. If you want o
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="../../nuget/RoundhousE_Logo.NuGet.jpg" Pack="true" PackagePath="/images"/>
+    <None Include="../../nuget/RoundhousE_Logo.NuGet.jpg" Pack="true" PackagePath="/images" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ILMerge" Version="3.0.29" />

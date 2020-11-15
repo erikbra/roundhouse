@@ -19,10 +19,10 @@ using roundhouse.resolvers;
 using roundhouse.runners;
 using System.Reflection;
 using log4net.Repository;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using log4net.Core;
 using System.Text;
+using System.Text.Json;
 
 namespace roundhouse.console
 {
@@ -482,7 +482,7 @@ namespace roundhouse.console
                         throw new Exception("Configuration File does not exist: " + configuration.ConfigurationFile);
                     }
                     var json_Data = System.IO.File.ReadAllText(configuration.ConfigurationFile);
-                    var file_values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json_Data);
+                    var file_values = JsonSerializer.Deserialize<Dictionary<string, string>>(json_Data);
                     foreach(var key in file_values.Keys)
                     {
                         if(!string.IsNullOrEmpty(file_values[key]))

@@ -1,4 +1,4 @@
-using Should;
+using Shouldly;
 
 namespace roundhouse.tests.infrastructure.extensions
 {
@@ -19,7 +19,7 @@ namespace roundhouse.tests.infrastructure.extensions
             {
                 numbers_visited++;
             }
-            numbers_visited.ShouldEqual(2);
+            numbers_visited.ShouldBe(2);
         }
     }
 }

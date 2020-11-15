@@ -1,4 +1,4 @@
-using Should;
+using Shouldly;
 
 namespace roundhouse.tests.infrastructure.extensions
 {
@@ -26,7 +26,7 @@ namespace roundhouse.tests.infrastructure.extensions
         [Observation]
         public void should_return_the_constructor_that_takes_the_most_arguments()
         {
-            result.GetParameters().Count().ShouldEqual(2);
+            result.GetParameters().Count().ShouldBe(2);
         }
     }
 

@@ -1,5 +1,5 @@
 using Moq;
-using Should;
+using Shouldly;
 
 namespace roundhouse.tests.infrastructure.logging
 {

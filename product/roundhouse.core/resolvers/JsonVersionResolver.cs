@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
 using roundhouse.infrastructure.filesystem;
 using roundhouse.infrastructure.logging;
 
@@ -35,7 +35,7 @@ namespace roundhouse.resolvers
                 try
                 {
                     string json = file_system.read_file_text(version_file);
-                    JsonVersionNumber item = JsonConvert.DeserializeObject<JsonVersionNumber>(json);
+                    JsonVersionNumber item = JsonSerializer.Deserialize<JsonVersionNumber>(json);
                     version = item.version;
                     Log.bound_to(this).log_an_info_event_containing(" Found version {0} from {1}.", version, version_file);
                 }

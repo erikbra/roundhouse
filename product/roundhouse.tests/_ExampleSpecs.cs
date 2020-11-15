@@ -17,7 +17,7 @@
 // ==============================================================================
 namespace roundhouse.tests
 {
-    using Should;
+    using Shouldly;
 
     public class ExampleSpecs
     {
@@ -39,13 +39,13 @@ namespace roundhouse.tests
             [Fact]
             public void should_be_equal_to_six()
             {
-                result.ShouldEqual(6);
+                result.ShouldBe(6);
             }
             
             [Fact]
             public void should_not_be_equal_to_nine()
             {
-                result.ShouldNotEqual(9);
+                result.ShouldNotBe(9);
             }
         }
 
@@ -60,7 +60,7 @@ namespace roundhouse.tests
             [Fact]
             public void should_be_equal_to_two()
             {
-                result.ShouldEqual(2);
+                result.ShouldBe(2);
             }
         }
     }

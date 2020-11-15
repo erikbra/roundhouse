@@ -15,6 +15,9 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 // ==============================================================================
+
+using Shouldly;
+
 namespace roundhouse.tests.integration
 {
     using Should;
@@ -39,7 +42,7 @@ namespace roundhouse.tests.integration
             [Fact]
             public void should_be_equal_to_six()
             {
-                result.ShouldEqual(6);
+                result.ShouldBe(6);
             }
             
             [Fact]
@@ -60,7 +63,7 @@ namespace roundhouse.tests.integration
             [Fact]
             public void should_be_equal_to_two()
             {
-                result.ShouldEqual(2);
+                result.ShouldBe(2);
             }
         }
     }

@@ -2,15 +2,15 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using roundhouse.databases;
 using roundhouse.infrastructure.logging.custom;
-using Should;
+using Shouldly;
 
 namespace roundhouse.tests.databases
 {
     using consoles;
     using roundhouse.databases.sqlserver;
-    using roundhouse.databases.sqlserverce;
     using roundhouse.databases.mysql;
 #if NET461
+    using roundhouse.databases.sqlserverce;
     using roundhouse.databases.oracle;
     using roundhouse.databases.access;
 #endif
@@ -45,6 +45,12 @@ namespace roundhouse.tests.databases
         {
             public DbProviderFactory factory => get_db_provider_factory();
         }
+        
+        public class TestableSqlServerCEDatabase : SqlServerCEDatabase, ITestableDatabase
+        {
+            public DbProviderFactory factory => get_db_provider_factory();
+        }
+
 
 #endif
 
@@ -68,11 +74,7 @@ namespace roundhouse.tests.databases
             public DbProviderFactory factory => get_db_provider_factory();
         }
 
-        public class TestableSqlServerCEDatabase : SqlServerCEDatabase, ITestableDatabase
-        {
-            public DbProviderFactory factory => get_db_provider_factory();
-        }
-
+    
 
         // ReSharper disable once InconsistentNaming
         public abstract class concern_for_Database<TDatabase> : TinySpec<AdoNetDatabase> where TDatabase: AdoNetDatabase, ITestableDatabase, new() 
@@ -116,7 +118,7 @@ namespace roundhouse.tests.databases
             public void has_sql_server_provider_factory()
             {
                 DbProviderFactory fac = testable_sut().factory;
-                fac.ShouldBeType<SqlClientFactory>();
+                fac.ShouldBeOfType<SqlClientFactory>();
             }
         }
 
@@ -127,7 +129,7 @@ namespace roundhouse.tests.databases
             public void has_mysql_provider_factory()
             {
                 DbProviderFactory fac = testable_sut().factory;
-                fac.ShouldBeType<global::MySql.Data.MySqlClient.MySqlClientFactory>();
+                fac.ShouldBeOfType<global::MySql.Data.MySqlClient.MySqlClientFactory>();
             }
         }
         
@@ -170,7 +172,7 @@ namespace roundhouse.tests.databases
             public void has_npgsql_provider_factory()
             {
                 DbProviderFactory fac = testable_sut().factory;
-                fac.ShouldBeType<Npgsql.NpgsqlFactory>();
+                fac.ShouldBeOfType<Npgsql.NpgsqlFactory>();
             }
         }
 
@@ -194,7 +196,7 @@ namespace roundhouse.tests.databases
             public void has_sqlite_provider_factory()
             {
                 DbProviderFactory fac = testable_sut().factory;
-                fac.ShouldBeType<System.Data.SqlClient.SqlClientFactory>();
+                fac.ShouldBeOfType<System.Data.SqlClient.SqlClientFactory>();
             }
         }
 
@@ -206,7 +208,7 @@ namespace roundhouse.tests.databases
             public void has_sqlite_provider_factory()
             {
                 DbProviderFactory fac = testable_sut().factory;
-                fac.ShouldBeType<System.Data.SqlServerCe.SqlCeProviderFactory>();
+                fac.ShouldBeOfType<System.Data.SqlServerCe.SqlCeProviderFactory>();
             }
         }
 #endif
