@@ -1,13 +1,9 @@
 namespace roundhouse.infrastructure.persistence
 {
     using System;
-    using System.Collections.Generic;
-    using extensions;
     using logging;
     using NHibernate;
     using NHibernate.Cfg;
-    using NHibernate.Criterion;
-    using NHibernate.Transform;
 
     public sealed class Repository : IRepository
     {
@@ -71,85 +67,6 @@ namespace roundhouse.infrastructure.persistence
             session = null;
         }
 
-        public IList<T> get_all<T>() where T : class
-        {
-            IList<T> list;
-
-            using (ensure_session_started())
-            {
-                IQueryOver<T, T> criteria = session.QueryOver<T>();
-                list = criteria.List<T>();
-            }
-
-            Log.bound_to(this).log_a_debug_event_containing("Repository found {0} records of type {1}.", list.Count, typeof(T).Name);
-
-            return list;
-        }
-
-        public IList<T> get_with_criteria<T>(QueryOver<T> detachedCriteria) where T : class
-        {
-            if (detachedCriteria == null)
-            {
-                Log.bound_to(this).log_a_warning_event_containing("Please ensure you send in a criteria when you want to limit records. Otherwise please consider using GetAll(). Returning empty list.");
-                return null;
-            }
-
-            IList<T> list;
-
-            using (ensure_session_started())
-            {
-                IQueryOver<T, T> criteria = detachedCriteria.GetExecutableQueryOver(session);
-                list = criteria.List<T>();
-            }
-
-            Log.bound_to(this).log_a_debug_event_containing("Repository found {0} records of type {1} with criteria {2}.", list.Count, typeof(T).Name, detachedCriteria.to_string());
-
-            return list;
-        }
-
-        public IList<T> get_transformation_with_criteria<T>(QueryOver<T> detachedCriteria) where T : class
-        {
-            if (detachedCriteria == null)
-            {
-                Log.bound_to(this).log_a_warning_event_containing("Please ensure you send in a criteria when you want to get transformed records. Otherwise please consider using GetAll(). Returning empty list.");
-                return null;
-            }
-
-            IList<T> list;
-
-            using (ensure_session_started())
-            {
-                IQueryOver<T, T> criteria = detachedCriteria.GetExecutableQueryOver(session);
-                list = criteria
-                    .TransformUsing(Transformers.AliasToBean<T>())
-                    .List<T>();
-            }
-
-            Log.bound_to(this).log_a_debug_event_containing("Repository found {0} records of type {1} with criteria {2}.", list.Count, typeof(T).Name, detachedCriteria.to_string());
-
-            return list;
-        }
-        
-        public void save_or_update<T>(IList<T> list) where T : class
-        {
-            if (list == null || list.Count == 0)
-            {
-                Log.bound_to(this).log_a_warning_event_containing("Please ensure you send a non null list of records to save.");
-                return;
-            }
-            Log.bound_to(this).log_a_debug_event_containing("Received {0} records of type {1} marked for save/update.", list.Count, typeof(T).Name);
-
-            using (ensure_session_started())
-            {
-                foreach (T item in list)
-                {
-                    save_or_update(item);
-                }
-            }
-
-            Log.bound_to(this).log_a_debug_event_containing("Saved {0} records of type {1} successfully.", list.Count, typeof(T).Name);
-        }
-
         public void save_or_update<T>(T item) where T : class
         {
             if (item == null)
@@ -165,28 +82,6 @@ namespace roundhouse.infrastructure.persistence
             }
 
             Log.bound_to(this).log_a_debug_event_containing("Saved item of type {0} successfully.", typeof(T).Name);
-        }
-
-        public void delete<T>(IList<T> list) where T : class
-        {
-            if (list == null || list.Count == 0)
-            {
-                Log.bound_to(this).log_a_warning_event_containing("Please ensure you send a non null list of records to delete.");
-                return;
-            }
-
-            Log.bound_to(this).log_an_info_event_containing("Received {0} records of type {1} marked for deletion.", list.Count, typeof(T).Name);
-
-            using (ensure_session_started())
-            {
-                foreach (T item in list)
-                {
-                    session.Delete(item);
-                    session.Flush();
-                }
-            }
-
-            Log.bound_to(this).log_an_info_event_containing("Removed {0} records of type {1} successfully.", list.Count, typeof(T).Name);
         }
 
         private IDisposable ensure_session_started()

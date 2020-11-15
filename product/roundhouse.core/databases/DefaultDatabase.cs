@@ -218,10 +218,18 @@ namespace roundhouse.databases
             Log.bound_to(this).log_a_debug_event_containing("[SQL] Running (on connection '{0}'): {1}{2}", connection_type.ToString(), Environment.NewLine, sql_to_run);
             return run_sql_scalar(sql_to_run, connection_type, null);
         }
+        
+        public virtual IEnumerable<T> run_sql_query<T>(string sql_to_run, ConnectionType connection_type)
+        {
+            Log.bound_to(this).log_a_debug_event_containing("[SQL] Running (on connection '{0}'): {1}{2}", connection_type.ToString(), Environment.NewLine, sql_to_run);
+            return run_sql_query<T>(sql_to_run, connection_type, null);
+        }
 
         protected abstract void run_sql(string sql_to_run, ConnectionType connection_type, IList<IParameter<IDbDataParameter>> parameters);
 
         protected abstract object run_sql_scalar(string sql_to_run, ConnectionType connection_type, IList<IParameter<IDbDataParameter>> parameters);
+
+        protected abstract IEnumerable<T> run_sql_query<T>(string sql_to_run, ConnectionType connection_type, object parameters);
 
         public virtual void insert_script_run(string script_name, string sql_to_run, string sql_to_run_hash, bool run_this_script_once, long version_id)
         {
@@ -278,15 +286,16 @@ namespace roundhouse.databases
         {
             string version = "0";
 
-            QueryOver<Version> crit = QueryOver.Of<Version>()
-                .Where(x => x.repository_path == (repository_path ?? string.Empty))
-                .OrderBy(x => x.entry_date).Desc
-                .Take(1);
+            // TODO: Fix proper parameters to avoid SQL injection
+            var sql = @"SELECT TOP 1 * " +
+                      $"FROM {roundhouse_schema_name}.{version_table_name} " +
+                      $"WHERE repository_path = '{repository_path}'" +
+                      $"ORDER BY entry_date DESC";
 
             IList<Version> items = null;
             try
             {
-                items = retry_policy.Execute(() => repository.get_with_criteria(crit));
+                items = retry_policy.Execute(() => run_sql_query<Version>(sql, ConnectionType.Default)).ToList();
             }
             catch (Exception ex)
             {
@@ -345,7 +354,11 @@ namespace roundhouse.databases
 
         protected IList<ScriptsRun> get_all_scripts()
         {
-            return retry_policy.Execute(() => repository.get_all<ScriptsRun>());
+            //return retry_policy.Execute(() => repository.get_all<ScriptsRun>());
+            return retry_policy.Execute(() => 
+                run_sql_query<ScriptsRun>(
+                    $"SELECT * from {roundhouse_schema_name}.{scripts_run_table_name}", 
+                    ConnectionType.Default)).ToList();
         }
 
         protected ScriptsRun get_script_run(string script_name)

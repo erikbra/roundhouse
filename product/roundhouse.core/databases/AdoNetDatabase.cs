@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Dapper;
 
 namespace roundhouse.databases
 {
@@ -134,6 +135,18 @@ namespace roundhouse.databases
                 run_command_with(sql_to_run, connection_type, parameters);
             }
         }
+        
+        protected override IEnumerable<T> run_sql_query<T>(string sql_to_run, ConnectionType connection_type,
+            object parameters)
+        {
+            if (string.IsNullOrEmpty(sql_to_run))
+            {
+                return Enumerable.Empty<T>();
+            }
+            
+            var connection = get_db_connection(connection_type);
+            return retry_policy.Execute(() => connection.underlying_type().Query<T>(sql_to_run, parameters, transaction));
+        }
 
         private void run_command_with(string sql_to_run, ConnectionType connection_type,
             IList<IParameter<IDbDataParameter>> parameters)
@@ -167,6 +180,38 @@ namespace roundhouse.databases
 
             return return_value;
         }
+
+        protected IConnection<IDbConnection> get_db_connection(ConnectionType connection_type) =>
+            connection_type switch
+            {
+                ConnectionType.Default => get_open_server_connection(),
+                ConnectionType.Admin => get_open_admin_connection(),
+                _ => throw new ArgumentOutOfRangeException(nameof(connection_type), connection_type, "Invalid connection type: " + connection_type)
+                
+            };
+
+        private IConnection<IDbConnection> get_open_server_connection()
+        {
+            if (server_connection == null ||
+                server_connection.underlying_type().State != ConnectionState.Open)
+            {
+                open_connection(false);
+            }
+
+            return server_connection;
+        }
+        
+        private IConnection<IDbConnection> get_open_admin_connection()
+        {
+            if (admin_connection == null ||
+                admin_connection.underlying_type().State != ConnectionState.Open)
+            {
+                open_admin_connection();
+            }
+
+            return admin_connection;
+        }
+        
 
         protected IDbCommand setup_database_command(string sql_to_run, ConnectionType connection_type,
             IEnumerable<IParameter<IDbDataParameter>> parameters)
