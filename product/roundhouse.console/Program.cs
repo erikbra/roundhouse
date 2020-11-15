@@ -71,12 +71,15 @@ namespace roundhouse.console
         private static IRunner get_runner(MainOperation operation, ConfigurationPropertyHolder config)
         {
             var migration_runner = main_operations.get_migration_runner(config);
+
+#pragma warning disable CS8509
             return operation switch
             {
                 MainOperation.RunDiffUtility => main_operations.get_diff_runner(config, migration_runner),
                 MainOperation.RunIsUpToDate => main_operations.get_update_check_runner(config, migration_runner),
                 MainOperation.RunMigrator => migration_runner
             };
+#pragma warning restore CA8509
         }
 
 

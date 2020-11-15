@@ -43,10 +43,10 @@ $file = $(Get-ChildItem -Recurse -Include MySql.Data.dll ~/.nuget/packages/mysql
 
 
 " * Building and packaging"
-msbuild /t:"Build" /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
+#msbuild /t:"Build" /p:DropFolder=$CODEDROP /p:Version="$($gitVersion.FullSemVer)" /p:NoPackageAnalysis=true /nologo /v:q /fl /flp:"LogFile=$LOGDIR/msbuild.log;Verbosity=n" /p:Configuration=Build /p:Platform="Any CPU"
 
 "    - NuGet libraries"
-dotnet pack -nologo --no-build -v q -p:Version="$($gitVersion.FullSemVer)" -p:NoPackageAnalysis=true -p:Configuration=Build -p:Platform="Any CPU" -o ${PACKAGEDIR}
+dotnet pack -nologo -v q -p:Version="$($gitVersion.FullSemVer)" -p:NoPackageAnalysis=true -p:Configuration=Build -p:Platform="Any CPU" -o ${PACKAGEDIR}
 
 
 "    - net461 command-line nuget package"
