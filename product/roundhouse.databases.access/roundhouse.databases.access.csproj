@@ -51,7 +51,7 @@ This is the MS Access database package.
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../nuget/RoundhousE_Logo.NuGet.jpg" Pack="true" PackagePath="/images"/>
+    <None Include="../../nuget/RoundhousE_Logo.NuGet.jpg" Pack="true" PackagePath="/images" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\roundhouse.core\roundhouse.core.csproj" />

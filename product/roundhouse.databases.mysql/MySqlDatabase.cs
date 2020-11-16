@@ -1,6 +1,8 @@
 ﻿using System.Data.Common;
 using roundhouse.consoles;
 using System.IO;
+using roundhouse.databases.mysql.db_definitions;
+using roundhouse.db_definitions;
 
 namespace roundhouse.databases.mysql
 {
@@ -138,6 +140,12 @@ namespace roundhouse.databases.mysql
         public override void run_database_specific_tasks()
         {
             Log.bound_to(this).log_a_debug_event_containing("MySQL has no database specific tasks. Moving along now...");
+        }
+        
+        public override void create_or_update_roundhouse_tables()
+        {
+            ISchemaDefinitions schema_definitions = new MySqlSchemaDefinitions(this);
+            schema_definitions.CreateRoundhouseSchemaTables();
         }
 
         public override void run_sql(string sql_to_run, ConnectionType connection_type)

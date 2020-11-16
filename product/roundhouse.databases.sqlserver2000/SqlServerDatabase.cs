@@ -1,5 +1,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
+using roundhouse.databases.sqlserver2000.db_definitions;
+using roundhouse.db_definitions;
 using roundhouse.infrastructure.logging;
 
 namespace roundhouse.databases.sqlserver2000
@@ -91,6 +93,12 @@ namespace roundhouse.databases.sqlserver2000
             //TODO: Create user
 
             //run_sql(set_recovery_mode_script(simple)
+        }
+        
+        public override void create_or_update_roundhouse_tables()
+        {
+            ISchemaDefinitions schema_definitions = new SqlServerSchemaDefinitions(this);
+            schema_definitions.CreateRoundhouseSchemaTables();
         }
 
         public override string create_database_script()

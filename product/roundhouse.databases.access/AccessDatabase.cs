@@ -1,4 +1,6 @@
 using System.Data.Common;
+using roundhouse.databases.access.db_definitions;
+using roundhouse.db_definitions;
 using roundhouse.infrastructure.logging;
 using roundhouse.sqlsplitters;
 
@@ -117,6 +119,12 @@ namespace roundhouse.databases.access
         {
             Log.bound_to(this).log_a_debug_event_containing("Access has no specific database tasks. Returning...");
             //TODO: Anything for Access?
+        }
+        
+        public override void create_or_update_roundhouse_tables()
+        {
+            ISchemaDefinitions schema_definitions = new AccessSchemaDefinitions(this);
+            schema_definitions.CreateRoundhouseSchemaTables();
         }
 
         public override string create_database_script()
